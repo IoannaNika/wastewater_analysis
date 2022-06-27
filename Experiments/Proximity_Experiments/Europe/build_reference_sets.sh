@@ -19,7 +19,7 @@ for reference_set in \
     #build kallisto index
     kallisto index -i reference_sets/$1/sequences.kallisto_idx  reference_sets/$1/sequences.fasta
 
-    # remove everything except the metadata file, the fasta file & the kallisto index
+    # remove everything except the metadata file, the fasta file, the lineage contents file & the kallisto index
 
     for file in reference_sets/$1/*; do \
 

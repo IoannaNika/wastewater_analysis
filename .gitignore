@@ -4,9 +4,14 @@ data
 **/reference_set/**
 **/reference_sets/**
 **/benchmarks/**
-.bam
-.sam
-.fasta
+**/*.bam
+**/*.sam
+**/*.fasta
+**/*.log
+**/*.tsv
+**/*.h5
+**/run_info.json
+
 
 # macOS
 

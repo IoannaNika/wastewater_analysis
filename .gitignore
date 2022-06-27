@@ -1,0 +1,16 @@
+# Data
+data
+
+**/reference_set/**
+**/reference_sets/**
+**/benchmarks/**
+.bam
+.sam
+.fasta
+
+# macOS
+
+.DS_Store
+
+# Python
+__pycache__

@@ -7,7 +7,7 @@ import subprocess
 import pandas as pd
 from random import randint
 
-from select_samples import filter_fasta, read_metadata, add_nonN_count
+from pipeline.select_samples import filter_fasta, read_metadata, add_nonN_count
 
 
 def main():

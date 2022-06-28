@@ -1,6 +1,10 @@
 mkdir reference_sets
 
-for reference_set in \
+for reference_set in \ 
+"Estonia ../../../data/Proximity_Experiments/Europe/reference_sets/Estonia/metadata.tsv ../../../data/Proximity_Experiments/Europe/reference_sets/Estonia/sequences.fasta" \
+"Estonia_nearby_countries ../../../data/Proximity_Experiments/Europe/reference_sets/Estonia_nearby_countries/metadata.tsv ../../../data/Proximity_Experiments/Europe/reference_sets/Estonia_nearby_countries/sequences.fasta" \
+"Spain ../../../data/Proximity_Experiments/Europe/reference_sets/Spain/metadata.tsv ../../../data/Proximity_Experiments/Europe/reference_sets/Spain/sequences.fasta" \
+"Spain_nearby_countries ../../../data/Proximity_Experiments/Europe/reference_sets/Spain_nearby_countries/metadata.tsv ../../../data/Proximity_Experiments/Europe/reference_sets/Spain_nearby_countries/sequences.fasta" \
 "Netherlands ../../../data/Proximity_Experiments/Europe/reference_sets/Netherlands/metadata.tsv ../../../data/Proximity_Experiments/Europe/reference_sets/Netherlands/sequences.fasta" \
 "Netherlands_nearby_countries ../../../data/Proximity_Experiments/Europe/reference_sets/Netherlands_nearby_countries/metadata.tsv ../../../data/Proximity_Experiments/Europe/reference_sets/Netherlands_nearby_countries/sequences.fasta" \
 "Europe ../../../data/Proximity_Experiments/Europe/reference_sets/Europe/metadata.tsv ../../../data/Proximity_Experiments/Europe/reference_sets/Europe/sequences.fasta" \
@@ -36,4 +40,3 @@ for reference_set in \
     done
 
 done
-

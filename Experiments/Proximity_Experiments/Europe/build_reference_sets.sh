@@ -16,7 +16,7 @@ for reference_set in \
     # preprocess references
     python ../../../manuscript/preprocess_references_v1.py -m $2 -f $3 --seed 0 -o reference_sets/$1
     # calculate within lineage variation
-    bash ../../../pipeline/call_variants.sh reference_sets/$1 /Users/ioanna/Projects/CSE3000_wastewater_project/data/SARS-CoV-2-NC_045513.fasta
+    bash ../../../pipeline/pipeline/call_variants.sh reference_sets/$1 /Users/ioanna/Projects/CSE3000_wastewater_project/data/SARS-CoV-2-NC_045513.fasta
     # select samples
     python ../../../manuscript/select_samples_v1.py -m $2 -f $3 -o reference_sets/$1 --vcf reference_sets/$1/*_merged.vcf.gz --freq reference_sets/$1/*_merged.frq
 

@@ -1,9 +1,9 @@
 mkdir reference_sets
 
 for reference_set in \
+"Massachusetts ../../../data/Proximity_Experiments/North_America/reference_sets/Massachusetts/metadata.tsv ../../../data/Proximity_Experiments/North_America/reference_sets/Massachusetts/sequences.fasta" \
 "Connecticut ../../../data/Proximity_Experiments/North_America/reference_sets/Connecticut/metadata.tsv ../../../data/Proximity_Experiments/North_America/reference_sets/Connecticut/sequences.fasta" \
 "Connecticut_nearby_states ../../../data/Proximity_Experiments/North_America/reference_sets/Connecticut_nearby_states/metadata.tsv ../../../data/Proximity_Experiments/North_America/reference_sets/Connecticut_nearby_states/sequences.fasta" \
-"Massachusetts ../../../data/Proximity_Experiments/North_America/reference_sets/Massachusetts/metadata.tsv ../../../data/Proximity_Experiments/North_America/reference_sets/Massachusetts/sequences.fasta" \
 "Massachusetts_nearby_states ../../../data/Proximity_Experiments/North_America/reference_sets/Massachusetts_nearby_states/metadata.tsv ../../../data/Proximity_Experiments/North_America/reference_sets/Massachusetts_nearby_states/sequences.fasta" \
 "Indiana ../../../data/Proximity_Experiments/North_America/reference_sets/Indiana/metadata.tsv ../../../data/Proximity_Experiments/North_America/reference_sets/Indiana/sequences.fasta" \
 "Indiana_nearby_states ../../../data/Proximity_Experiments/North_America/reference_sets/Indiana_nearby_states/metadata.tsv ../../../data/Proximity_Experiments/North_America/reference_sets/Indiana_nearby_states/sequences.fasta" \
@@ -17,7 +17,7 @@ for reference_set in \
     # preprocess references
     python ../../../manuscript/preprocess_references_v1.py -m $2 -f $3 --seed 0 -o reference_sets/$1
     # calculate within lineage variation
-    bash ../../../pipeline/call_variants.sh reference_sets/$1 /Users/ioanna/Projects/CSE3000_wastewater_project/data/SARS-CoV-2-NC_045513.fasta
+    bash ../../../pipeline/pipeline/call_variants.sh reference_sets/$1 /Users/ioanna/Projects/CSE3000_wastewater_project/data/SARS-CoV-2-NC_045513.fasta
     # select samples
     python ../../../manuscript/select_samples_v1.py -m $2 -f $3 -o reference_sets/$1 --vcf reference_sets/$1/*_merged.vcf.gz --freq reference_sets/$1/*_merged.frq
 

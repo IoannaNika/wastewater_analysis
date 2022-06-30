@@ -16,6 +16,7 @@ def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq
         for seed in seeds:
             results[ref_set][seed] = dict()
             for ab in abundances:
+                print(ref_set, seed, ab)
                 path = "kallisto_predictions/{}/seed_{}/{}_ab{}/predictions_m{}.tsv".format(ref_set, seed, seq_name, ab, threshold)
                 res_files = list(filter(lambda p: path in p, all_files))
                 predictions_df = pd.read_csv(res_files[0],sep='\t',skiprows=3, header = None)

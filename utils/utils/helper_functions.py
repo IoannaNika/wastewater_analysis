@@ -3,6 +3,7 @@ from posixpath import dirname
 from numpy import absolute
 import pandas as pd
 import json
+from Bio import SeqIO
 
 # Output predictions as json file for proximity experiments
 def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq_name):
@@ -65,3 +66,40 @@ def calculate_absolute_errors(results_dict, seeds, abundances, ref_sets):
 
 
     return absolute_errors
+
+# given a fasta file and a list of sequence identifiers,
+# returns the sequences that are not included in the list of identifiers provided.
+# a the fasta file with the resulting sequences are saved under
+# the name of the target file provided as input.
+def filter_fasta(fasta_file, identifiers, target_file):
+    print(len(identifiers))
+    
+    if os.path.exists(target_file):
+        os.remove(target_file)
+    
+    seqs = []
+    
+    for seq in SeqIO.parse(fasta_file, "fasta"):
+        if (identifiers.count(seq.description.strip()) == 0):
+            seqs.append(seq) 
+    
+    print("Writing sequences: ", len(seqs))
+    # Write sequences to file
+    with open(target_file, "w") as target:
+        SeqIO.write(seqs, target, "fasta")
+
+    print("Done, results can be found in "  + target_file)
+
+    f_ids = parse_fasta(target_file)
+    print("Final number of sequences : ", len(f_ids))
+    return
+
+
+# returns sequence identifiers given a fasta file.
+def parse_fasta(fname):
+    identifiers = []
+    with open(fname, "r") as fh:
+        for line in fh:
+            if line.startswith(">"):
+                identifiers.append(line[1:].strip())
+    return identifiers

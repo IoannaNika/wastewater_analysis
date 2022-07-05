@@ -97,7 +97,7 @@ def plot_with_line_plots_two_scales(continents, ref_sets_dict, absolute_errors, 
                     ax.grid("white")
                     ax.set_yticks((0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100))
                     ax.set_xticks(allele_freqs)
-                    ax.set_ylabel("Average absolute prediction errors", fontsize = 8)
+                    ax.set_ylabel("Average absolute prediction error", fontsize = 8)
                     ax.set_ylim(0,100)
                     ax.tick_params(axis='both', labelsize=6)
                     ax.label_outer()

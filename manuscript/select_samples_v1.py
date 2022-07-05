@@ -65,6 +65,7 @@ def select_ref_genomes(metadata_df, max_per_lineage, vcf_list, freq_list, min_aa
     print("# lineages = {}".format(len(lineages)))
     # assign vcfs to lineages, assuming vcfs are in current directory and named after the corresponding lineage
     vcf_dict = {vcf.split('/')[-1].split('_')[0] : vcf for vcf in vcf_list}
+    print(vcf_list)
     freq_dict = {fname.split('/')[-1].split('_')[0] : fname for fname in freq_list}
     # select samples for every lineage
     selection_ids = []

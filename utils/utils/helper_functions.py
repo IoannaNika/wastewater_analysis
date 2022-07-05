@@ -35,6 +35,35 @@ def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq
     
     return 
 
+# Output predictions as json file for allele frequency experiments
+def output_results_to_json_af(dir_name, threshold, ref_sets, alllele_freqs, abundances, seq_name):
+    
+    all_files = getListOfFiles("kallisto_predictions/" + dir_name + "/")
+    lineage_measured = seq_name.split("_")[0]
+    results = dict()
+
+    for ref_set in ref_sets:
+        results[ref_set] = dict()
+        for af in alllele_freqs:
+            results[ref_set][af] = dict()
+            for ab in abundances:
+                path = "kallisto_predictions/{}/{}/{}/{}_ab{}/predictions_m{}.tsv".format(dir_name, ref_set, af, seq_name, ab, threshold)
+                res_files = list(filter(lambda p: path in p, all_files))
+                predictions_df = pd.read_csv(res_files[0],sep='\t',skiprows=3, header = None)
+
+                for i in range(0, len(predictions_df)):
+                    if predictions_df[0][i] == lineage_measured:
+                        results[ref_set][af][ab]= predictions_df[2][i]
+                        break
+                
+                    if ab not in results[ref_set][af].keys():
+                        results[ref_set][af][ab] = 0
+        
+    with open('results_{}.json'.format(dir_name), 'w') as f:
+        json.dump(results, f)
+    
+    return 
+
 
 # For the given path, get the List of all files in the directory tree 
 def getListOfFiles(dirName):
@@ -54,6 +83,7 @@ def getListOfFiles(dirName):
                 
     return allFiles
 
+#calculate absolute errors for proximity experiments
 def calculate_absolute_errors(results_dict, seeds, abundances, ref_sets):
     absolute_errors = dict()
 
@@ -66,6 +96,21 @@ def calculate_absolute_errors(results_dict, seeds, abundances, ref_sets):
 
 
     return absolute_errors
+
+def calculate_absolute_errors_af(results_dict, allele_freqs, abundances, ref_sets_dict, continents):
+    abs_errors = dict()
+
+    for continent in continents: 
+        abs_errors[continent] = dict()
+        for ref_set in ref_sets_dict[continent]:
+            abs_errors[continent][ref_set] = dict()
+            for af in allele_freqs:
+                af = str(af)
+                abs_errors[continent][ref_set][af] = dict()
+                for ab in abundances:
+                    absolute_error = round(abs(ab - results_dict[continent][ref_set][af][str(ab)]), 3)
+                    abs_errors[continent][ref_set][af][str(ab)] = absolute_error
+    return abs_errors
 
 # given a fasta file and a list of sequence identifiers,
 # returns the sequences that are not included in the list of identifiers provided.

@@ -70,34 +70,46 @@ def main():
 
     print("{} sequences selected".format(len(selection_dict.keys())))
 
+   
     # write sequences to separate files
+    print("searching fasta and writing sequences to output directory...")
     with open(args.fasta_in, 'r') as f_in:
         keep_line = False
         line_idx = 0
         selection_idx = 0
         for line in f_in:
             if line[0] == '>':
-                # sequence identifier
+                # new record starts here
+                # first store previous record
+                if keep_line:
+                    outfile = "{}/{}/{}.fa".format(args.outdir, lin_id, gisaid_id)
+                    with open(outfile, 'w') as f_out:
+                        f_out.write(">{}\n{}\n".format(seq_id, seq))
+                # now parse new record identifier
                 line_idx += 1
                 if line_idx % 100000 == 0:
                     print("{} sequences from input fasta processed".format(line_idx))
                     print("{} sequences from selection found".format(selection_idx))
-                seq_id = line.rstrip('\n').lstrip('>')
+                # seq_id = line.rstrip('\n').lstrip('>').split('|')[0]
+                seq_id = line.rstrip('\n').lstrip('>').split()[0]
                 try:
                     lin_id, gisaid_id = selection_dict[seq_id]
+                    seq = ""
                     keep_line = True
                     selection_idx += 1
-                    # print("keeping sequence {}".format(seq_id))
+                    # now remove key from dict to avoid writing duplicates
+                    del selection_dict[seq_id]
                 except KeyError as e:
                     # item not found as sequence was not selected
-                    # print("not keeping sequence {}".format(seq_id))
                     keep_line = False
             elif keep_line:
-                # write nucleotide sequence
-                outfile = "{}/{}/{}.fa".format(args.outdir, lin_id, gisaid_id)
-                with open(outfile, 'w') as f_out:
-                    f_out.write(">{}\n".format(seq_id))
-                    f_out.write(line)
+                # append nucleotide sequence
+                seq += line.rstrip('\n')
+        # add final record if necessary
+        if keep_line:
+            outfile = "{}/{}/{}.fa".format(args.outdir, lin_id, gisaid_id)
+            with open(outfile, 'w') as f_out:
+                f_out.write(">{}\n{}\n".format(seq_id, seq))
         print("{} sequences from input fasta processed".format(line_idx))
         print("{} sequences from selection found".format(selection_idx))
 

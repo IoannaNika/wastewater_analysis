@@ -29,7 +29,7 @@ def main():
     selection_df = select_ref_genomes(full_df, args.max_per_lineage, args.vcf,
                                       args.freq, args.min_aaf)
     # replace spaces by underscores in sequence identifiers to avoid kallisto index issues
-    selection_df["Virus name"] = selection_df["Virus name"].str.replace(" ", "_")
+    selection_df["strain"] = selection_df["strain"].str.replace(" ", "_")
     # Write metadata of selected samples to new tsv
     metadata_out = args.outdir + "/metadata.tsv"
     selection_df.to_csv(metadata_out, sep='\t', index=False)
@@ -66,14 +66,15 @@ def select_ref_genomes(metadata_df, max_per_lineage, vcf_list, freq_list, min_aa
     lineage_counts = metadata_df["pangolin_lineage"].value_counts()
     print("# lineages = {}".format(len(lineages)))
     # assign vcfs to lineages, assuming vcfs are in current directory and named after the corresponding lineage
+    print(vcf_list, freq_list)
     vcf_dict = {vcf.split('/')[-1].split('_')[0] : vcf for vcf in vcf_list}
     freq_dict = {fname.split('/')[-1].split('_')[0] : fname for fname in freq_list}
     # select samples for every lineage
     selection_ids = []
     for lin_id in lineages:
         samples = metadata_df.loc[metadata_df["pangolin_lineage"] == lin_id]
-        samples = samples.sort_values(by=["N-Content", "Collection date"],
-                                      ascending=[True, False])
+        # samples = samples.sort_values(by=["N-Content", "Collection date"],
+        #                               ascending=[True, False])
         # read allele frequencies and extract sites with AAF >= minimal alt allele frequency
         try:
             allele_freq_file = freq_dict[lin_id]
@@ -150,7 +151,7 @@ def select_ref_genomes(metadata_df, max_per_lineage, vcf_list, freq_list, min_aa
 
     print("{} sequences selected in total".format(len(selection_ids)))
     selection_df = metadata_df.loc[
-                        metadata_df["Accession ID"].isin(selection_ids)]
+                        metadata_df["gisaid_epi_isl"].isin(selection_ids)]
     return selection_df
 
 

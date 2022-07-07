@@ -1,9 +1,8 @@
 import os
-from posixpath import dirname
-from numpy import absolute
 import pandas as pd
 import json
 from Bio import SeqIO
+import time
 
 # Output predictions as json file for proximity experiments
 def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq_name):
@@ -83,7 +82,7 @@ def getListOfFiles(dirName):
                 
     return allFiles
 
-#calculate absolute errors for proximity experiments
+# calculate absolute errors for proximity experiments
 def calculate_absolute_errors(results_dict, seeds, abundances, ref_sets):
     absolute_errors = dict()
 
@@ -96,7 +95,7 @@ def calculate_absolute_errors(results_dict, seeds, abundances, ref_sets):
 
 
     return absolute_errors
-
+# calculate absolute errors for allele frequency optimization experiment
 def calculate_absolute_errors_af(results_dict, allele_freqs, abundances, ref_sets_dict, continents):
     abs_errors = dict()
 
@@ -117,7 +116,7 @@ def calculate_absolute_errors_af(results_dict, allele_freqs, abundances, ref_set
 # a the fasta file with the resulting sequences are saved under
 # the name of the target file provided as input.
 def filter_fasta(fasta_file, identifiers, target_file):
-    print(len(identifiers))
+    print(len(identifiers), " sequences to be removed")
     
     if os.path.exists(target_file):
         os.remove(target_file)
@@ -148,3 +147,40 @@ def parse_fasta(fname):
             if line.startswith(">"):
                 identifiers.append(line[1:].strip())
     return identifiers
+
+def filter_dataset_by_date(metadata_inpt, fasta, outdir, start_date, end_date):
+    # make directory
+    if not os.path.isdir(outdir) :
+        os.mkdir(outdir)
+    
+    # define target files
+    target_mt = os.path.join(os.curdir, outdir, "metadata.tsv")
+    target_fasta = os.path.join(os.curdir, outdir, "sequences.fasta")
+
+    # delete target files if they exist
+    if os.path.exists(target_mt):
+        os.remove(target_mt)
+
+    if os.path.exists(target_fasta):
+        os.remove(target_fasta)
+    
+    # create target files (metadata) fasta is being created by the function filter_fasta
+    metadata = open(target_mt, "x")
+    metadata = open(target_mt, "a")
+
+    # read metadata 
+    metadata_df = pd.read_csv(metadata_inpt, sep='\t', dtype=str)
+    initial_identifiers = metadata_df['strain']
+    # filter metadata based on date
+    metadata_df = metadata_df[(metadata_df['date'] >= start_date) & (metadata_df['date'] <= end_date)]
+    to_be_kept_identifiers = metadata_df['strain']
+
+    to_be_removed_identifiers = list(initial_identifiers[~initial_identifiers.isin(to_be_kept_identifiers)])
+
+    # write_metadata
+    metadata_df.to_csv(target_mt, sep='\t')
+    # Select and write corresponding fasta
+    filter_fasta(fasta, to_be_removed_identifiers, target_fasta)
+
+
+    return 

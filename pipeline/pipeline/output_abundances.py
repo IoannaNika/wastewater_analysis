@@ -47,7 +47,18 @@ def main():
                 assert lineage not in lineage_to_variant.keys()
                 lineage_to_variant[lineage] = variant
     else:
-        lineages = df["Pango lineage"].unique()
+        pango_lineage = "Pango lineage"
+        try:
+            lineages = df[pango_lineage].unique()
+        except:
+            try:
+                pango_lineage = "pangolin_lineage"
+                lineages = df[pango_lineage].unique()
+            except:
+                pango_lineage = "pango_lineage"
+                lineages = df[pango_lineage].unique()
+
+            
         lineage_to_variant = {lineage : lineage for lineage in lineages}
         abundance_dict = {lineage : [0, 0] for lineage in lineages}
 
@@ -68,7 +79,7 @@ def main():
                 print("ERROR: abundance file format not recognized as kallisto or salmon")
                 sys.exit(1)
             seqname = line[0].split('|')[0]
-            lineage = df.loc[df["Virus name"] == seqname]["Pango lineage"]
+            lineage = df.loc[df["strain"] == seqname][pango_lineage]
             if lineage.empty:
                 print("ERROR: sequence {} not found in metadata".format(seqname))
             lineage = lineage.iloc[0]

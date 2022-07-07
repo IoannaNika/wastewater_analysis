@@ -43,7 +43,14 @@ def main():
                 sys.exit(1)
             seqname = line[0]
             if args.metadata:
-                variant = df.loc[df["strain"] == seqname]["pangolin_lineage"]
+                try:
+                    variant = df.loc[df["strain"] == seqname]["pangolin_lineage"]
+                except:
+                    try:
+                        variant = df.loc[df["strain"] == seqname]["pango_lineage"]
+                    except:
+                        variant = df.loc[df["strain"] == seqname]["Pango lineage"]
+
                 variant = variant.iloc[0]
             else:
                 variant = seqname

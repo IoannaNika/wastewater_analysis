@@ -23,6 +23,7 @@ def main():
     parser.add_argument('--seed', dest='seed', default=0, type=int, help="random seed for sequence selection")
     parser.add_argument('-o, --outdir', dest='outdir', type=str, default="seqs_per_lineage", help="output directory")
     parser.add_argument('--verbose', action='store_true')
+    parser.add_argument('--pango_lin', dest= "pango_lineage_var", type=str, default="pangolin_lineage", help="header for lineage")
     args = parser.parse_args()
 
     # create output directory
@@ -30,19 +31,25 @@ def main():
         os.mkdir(args.outdir)
     except FileExistsError:
         pass
+    
+    pango_lineage_var = args.pango_lineage_var
+
 
     # read metadata
     metadata_df = read_metadata(args.metadata,
                                 args.max_N_content,
-                                args.min_seq_len)
+                                args.min_seq_len, 
+                                pango_lineage_var)
     # remove duplicate sequences
     metadata_df.drop_duplicates(subset=["strain",
                                         "date",
                                         "date_submitted"],
                                 inplace=True,
+
                                 ignore_index=True)
+
     # extract lineage info
-    lineages = metadata_df["pangolin_lineage"].unique()
+    lineages = metadata_df[pango_lineage_var].unique()
 
     # select sequences
     selection_dict = {}
@@ -57,7 +64,7 @@ def main():
             for f_trash in old_files:
                 os.remove(f_trash)
         # filter for lineage, country and length
-        samples = metadata_df.loc[metadata_df["pangolin_lineage"] == lin_id]
+        samples = metadata_df.loc[metadata_df[pango_lineage_var] == lin_id]
         # add extra row to avoid pandas bug (https://github.com/pandas-dev/pandas/issues/35807)
         samples = samples.append(pd.Series({"Location" : ". / . / ."}),
                                  ignore_index=True)
@@ -159,15 +166,15 @@ def main():
     return
 
 
-def read_metadata(metadata_file, max_N_content, min_seq_len):
+def read_metadata(metadata_file, max_N_content, min_seq_len, pango_lineage_var):
     """Read metadata from tsv into dataframe and filter for completeness"""
     df = pd.read_csv(metadata_file, sep='\t', header=0, dtype=str)
     # adjust date representation in dataframe
     df["date"] = df["date"].str.replace('-XX','-01')
     df["date"] = pd.to_datetime(df.date, yearfirst=True)
     # remove samples wich have no pangolin lineage assigned (NaN or None)
-    df = df.loc[df["pangolin_lineage"].notna()]
-    df = df.loc[df["pangolin_lineage"] != "None"]
+    df = df.loc[df[pango_lineage_var].notna()]
+    df = df.loc[df[pango_lineage_var] != "None"]
     # remove samples which are marked as incomplete or N-content > threshold
     # df = df.astype({"Is complete?" : 'bool',
     #                 "N-Content" : 'float',

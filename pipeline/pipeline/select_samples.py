@@ -16,6 +16,7 @@ def main():
     parser.add_argument('-m, --metadata', dest='metadata', type=str, help="metadata tsv file for full sequence database")
     parser.add_argument('-f, --fasta', dest='fasta_in', type=str, help="fasta file representing full sequence database")
     parser.add_argument('-o, --outdir', dest='outdir', type=str, default='.', help="output directory")
+    parser.add_argument('--pango_lin', dest= "pango_lineage_var", type=str, default="pangolin_lineage", help="header for lineage")
     args = parser.parse_args()
 
     # Create output directory
@@ -23,11 +24,13 @@ def main():
         os.mkdir(args.outdir)
     except FileExistsError:
         pass
+    
+    pango_lineage_var = args.pango_lineage_var
 
     # Select references per pango lineage
-    full_df = read_metadata(args.metadata)
+    full_df = read_metadata(args.metadata,pango_lineage_var)
     selection_df = select_ref_genomes(full_df, args.max_per_lineage, args.vcf,
-                                      args.freq, args.min_aaf)
+                                      args.freq, args.min_aaf, pango_lineage_var)
     # replace spaces by underscores in sequence identifiers to avoid kallisto index issues
     selection_df["strain"] = selection_df["strain"].str.replace(" ", "_")
     # Write metadata of selected samples to new tsv
@@ -41,15 +44,15 @@ def main():
     return
 
 
-def read_metadata(metadata_file):
+def read_metadata(metadata_file, pango_lineage_var):
     """Read metadata from tsv into dataframe and filter for completeness"""
     df = pd.read_csv(metadata_file, sep='\t', header=0, dtype=str)
     # adjust date representation in dataframe
     df["date"] = df["date"].str.replace('-XX','-01')
     df["date"] = pd.to_datetime(df.date, yearfirst=True)
     # remove samples wich have no pangolin lineage assigned (NaN or None)
-    df = df.loc[df["pangolin_lineage"].notna()]
-    df = df.loc[df["pangolin_lineage"] != "None"]
+    df = df.loc[df[pango_lineage_var].notna()]
+    df = df.loc[df[pango_lineage_var] != "None"]
     
     # remove samples which are marked as incomplete or N-Content > 1%
     # df = df.astype({"Is complete?" : 'bool',
@@ -59,11 +62,11 @@ def read_metadata(metadata_file):
     return df
 
 
-def select_ref_genomes(metadata_df, max_per_lineage, vcf_list, freq_list, min_aaf):
+def select_ref_genomes(metadata_df, max_per_lineage, vcf_list, freq_list, min_aaf, pango_lineage_var):
     """For every pangolin lineage, select exactly one sample."""
     # check which lineages are present
-    lineages = metadata_df["pangolin_lineage"].unique()
-    lineage_counts = metadata_df["pangolin_lineage"].value_counts()
+    lineages = metadata_df[pango_lineage_var].unique()
+    lineage_counts = metadata_df[pango_lineage_var].value_counts()
     print("# lineages = {}".format(len(lineages)))
     # assign vcfs to lineages, assuming vcfs are in current directory and named after the corresponding lineage
     print(vcf_list, freq_list)
@@ -72,7 +75,7 @@ def select_ref_genomes(metadata_df, max_per_lineage, vcf_list, freq_list, min_aa
     # select samples for every lineage
     selection_ids = []
     for lin_id in lineages:
-        samples = metadata_df.loc[metadata_df["pangolin_lineage"] == lin_id]
+        samples = metadata_df.loc[metadata_df[pango_lineage_var] == lin_id]
         # samples = samples.sort_values(by=["N-Content", "Collection date"],
         #                               ascending=[True, False])
         # read allele frequencies and extract sites with AAF >= minimal alt allele frequency

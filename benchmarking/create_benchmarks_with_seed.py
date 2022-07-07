@@ -36,7 +36,7 @@ def main():
     VOC_names = [filepath.split('/')[-1] for filepath in VOC_files]
     exclude_list = [name.split('_')[0] for name in VOC_names]
 
-    full_df = read_metadata(args.metadata)
+    full_df = read_metadata(args.metadata, "pangolin_lineage")
     selection_df = select_benchmark_genomes(full_df,
                                             exclude_list)
     # filter fasta according to selection and write new fasta

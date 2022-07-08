@@ -1,8 +1,9 @@
 # Data
-data
+data/*.tsv
+data/.fasta
 
-**/reference_set/**
-**/reference_sets/**
+Experiments/**/reference_set/**
+Experiments/**/reference_sets/**
 **/benchmarks/**
 **/*.bam
 **/*.sam
@@ -12,6 +13,7 @@ data
 **/*.h5
 **/run_info.json
 
+# exclude pattern
 
 # macOS
 

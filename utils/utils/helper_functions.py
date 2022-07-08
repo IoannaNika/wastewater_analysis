@@ -184,3 +184,22 @@ def filter_dataset_by_date(metadata_inpt, fasta, outdir, start_date, end_date):
 
 
     return 
+
+def output_dataset_info(lineage, metadata_dir):
+    # load tsv file 
+    mt_file = pd.read_csv(metadata_dir + "/metadata.tsv", sep='\t')
+    # find max and min date from metadata
+    max_date = mt_file['date'].max()
+    min_date = mt_file['date'].min()
+    amount_of_seqs = len(mt_file)
+    amount_of_lineage_measured_seqs = mt_file["pango_lineage"].value_counts()[lineage]
+    amount_of_unique_lineages =mt_file['pango_lineage'].nunique()
+    data_info = dict()
+    data_info["Timespan"] = "{} till {}".format(max_date, min_date)
+    data_info["Total amount of sequences"] =  amount_of_seqs
+    data_info["Amount of {} sequences".format(lineage)] = amount_of_lineage_measured_seqs
+    data_info["Amount of lineages"] = amount_of_unique_lineages
+    data_info = pd.DataFrame.from_dict(data_info, orient='index')
+    data_info.to_csv(metadata_dir + "/dataset_info.csv")
+
+    return 

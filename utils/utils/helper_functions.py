@@ -199,7 +199,7 @@ def output_dataset_info(lineage, metadata_dir):
     data_info["Total amount of sequences"] =  amount_of_seqs
     data_info["Amount of {} sequences".format(lineage)] = amount_of_lineage_measured_seqs
     data_info["Amount of lineages"] = amount_of_unique_lineages
-    data_info = pd.DataFrame.from_dict(data_info, orient='index')
+    data_info = pd.DataFrame.from_dict([data_info])
     data_info.to_csv(metadata_dir + "/dataset_info.csv")
 
     return 

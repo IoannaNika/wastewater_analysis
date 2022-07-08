@@ -207,7 +207,7 @@ def output_dataset_info(lineage, metadata_dir, selection_metadata_dir):
     amount_of_lineage_measured_seqs = mt_file["pango_lineage"].value_counts()[lineage]
     amount_of_unique_lineages =mt_file['pango_lineage'].nunique()
     # Write data info to dictionary
-    data_info["Timespan"] = "{} till {}".format(max_date, min_date)
+    # data_info["Timespan"] = "{} till {}".format(max_date, min_date)
     data_info["Total amount of sequences"] =  amount_of_seqs
     data_info["Amount of {} sequences".format(lineage)] = amount_of_lineage_measured_seqs
     data_info["Amount of lineages"] = amount_of_unique_lineages
@@ -216,3 +216,29 @@ def output_dataset_info(lineage, metadata_dir, selection_metadata_dir):
     data_info.to_csv(metadata_dir + "/dataset_info.csv")
 
     return 
+
+def merge_csv_from_subdirectory(directory, down_dir_name, remove_files):
+    if os.path.exists(directory + "/dataset_info.csv"):
+        os.remove(directory + "/dataset_info.csv")
+
+    csv_files = getListOfFiles(directory)
+    res_files = list(filter(lambda p: ".csv" in p, csv_files))
+
+    final_csv = pd.DataFrame.from_dict(pd.read_csv(res_files[0]).to_dict())
+    final_csv[down_dir_name] = res_files[0].split("/")[-2]
+    if remove_files == True:
+            os.remove(res_files[0])
+    for path_to_csv in res_files[1:]:
+        up_dir = path_to_csv.split("/")[-2]
+        # read csv into dataframe
+        data_info = pd.read_csv(path_to_csv).to_dict()
+        data_info[down_dir_name] = up_dir
+        data_info = pd.DataFrame.from_dict(data_info)
+        final_csv = pd.concat([final_csv, data_info])
+        final_csv.to_csv(directory + "/dataset_info.csv")
+        if remove_files == True:
+            os.remove(path_to_csv)
+
+
+        
+    return

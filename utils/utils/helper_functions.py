@@ -35,30 +35,30 @@ def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq
     return 
 
 # Output predictions as json file for allele frequency experiments
-def output_results_to_json_af(dir_name, threshold, ref_sets, alllele_freqs, abundances, seq_name):
+def output_results_to_json_3_dirs(first_dir, threshold, second_dirs, third_dirs, abundances, seq_name):
     
-    all_files = getListOfFiles("kallisto_predictions/" + dir_name + "/")
+    all_files = getListOfFiles("kallisto_predictions/" + first_dir + "/")
     lineage_measured = seq_name.split("_")[0]
     results = dict()
 
-    for ref_set in ref_sets:
-        results[ref_set] = dict()
-        for af in alllele_freqs:
-            results[ref_set][af] = dict()
+    for second_dir in second_dirs:
+        results[second_dir] = dict()
+        for third_dir in third_dirs:
+            results[second_dir][third_dir] = dict()
             for ab in abundances:
-                path = "kallisto_predictions/{}/{}/{}/{}_ab{}/predictions_m{}.tsv".format(dir_name, ref_set, af, seq_name, ab, threshold)
+                path = "kallisto_predictions/{}/{}/{}/{}_ab{}/predictions_m{}.tsv".format(first_dir, second_dir, third_dir, seq_name, ab, threshold)
                 res_files = list(filter(lambda p: path in p, all_files))
                 predictions_df = pd.read_csv(res_files[0],sep='\t',skiprows=3, header = None)
 
                 for i in range(0, len(predictions_df)):
                     if predictions_df[0][i] == lineage_measured:
-                        results[ref_set][af][ab]= predictions_df[2][i]
+                        results[second_dir][third_dir][ab]= predictions_df[2][i]
                         break
                 
-                    if ab not in results[ref_set][af].keys():
-                        results[ref_set][af][ab] = 0
+                    if ab not in results[second_dir][third_dir].keys():
+                        results[second_dir][third_dir][ab] = 0
         
-    with open('results_{}.json'.format(dir_name), 'w') as f:
+    with open('results_{}.json'.format(first_dir), 'w') as f:
         json.dump(results, f)
     
     return 

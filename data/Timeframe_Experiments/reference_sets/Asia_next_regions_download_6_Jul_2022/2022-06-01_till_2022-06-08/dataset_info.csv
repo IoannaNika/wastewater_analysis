@@ -1,2 +1,2 @@
-,Amount of BA.4 sequences (after selection),Total amount of sequences (after selection),Timespan,Total amount of sequences,Amount of BA.4 sequences,Amount of lineages
-0,2,24,2022-06-08 till 2022-06-01,149,3,19
+,Amount of BA.4 sequences (after selection),Total amount of sequences (after selection),Sequence IDs of  the BA.4 lineage selected,Timespan,Total amount of sequences,Amount of BA.4 sequences,Amount of lineages
+0,2,24,"EPI_ISL_13392349, EPI_ISL_13191427",2022-06-08 till 2022-06-01,149,3,19

@@ -189,11 +189,13 @@ def output_dataset_info(lineage, metadata_dir, selection_metadata_dir):
     data_info = dict()
     if selection_metadata_dir != None:
         select_mt_file = pd.read_csv(selection_metadata_dir + "/metadata.tsv", sep='\t')
-    # find max and min date from metadata
         selection_amount_of_seqs = len(select_mt_file)
         selection_amount_of_lineage_measured_seqs = select_mt_file["pango_lineage"].value_counts()[lineage]
+        selection_ids = select_mt_file[select_mt_file["pango_lineage"] == lineage]["gisaid_epi_isl"]
+        selection_ids_str = ", ".join(id for id in selection_ids)
         data_info["Amount of {} sequences (after selection)".format(lineage)] = selection_amount_of_lineage_measured_seqs 
         data_info["Total amount of sequences (after selection)"] =  selection_amount_of_seqs
+        data_info["Sequence IDs of  the {} lineage selected".format(lineage)] = selection_ids_str
         pass
 
     # load tsv file 
@@ -204,7 +206,6 @@ def output_dataset_info(lineage, metadata_dir, selection_metadata_dir):
     amount_of_seqs = len(mt_file)
     amount_of_lineage_measured_seqs = mt_file["pango_lineage"].value_counts()[lineage]
     amount_of_unique_lineages =mt_file['pango_lineage'].nunique()
-
     # Write data info to dictionary
     data_info["Timespan"] = "{} till {}".format(max_date, min_date)
     data_info["Total amount of sequences"] =  amount_of_seqs

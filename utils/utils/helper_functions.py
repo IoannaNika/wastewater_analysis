@@ -238,7 +238,26 @@ def merge_csv_from_subdirectory(directory, down_dir_name, remove_files):
         final_csv.to_csv(directory + "/dataset_info.csv")
         if remove_files == True:
             os.remove(path_to_csv)
-
-
         
     return
+
+
+def filter_by_location_and_time(locations, location_type, start_date, end_date, metadata, fasta, outdir):
+
+    # read metadata
+    metadata_df = pd.read_csv(metadata, sep='\t', dtype=str)
+    # filter by location
+    filtered_mt = metadata_df[metadata_df[location_type].isin(locations)]
+    # filter by time
+    filtered_mt = filtered_mt[(filtered_mt['date'] >= start_date) & (filtered_mt['date'] <= end_date)]
+    # write metadata 
+    metadata_df.to_csv(outdir + "metadata.tsv", sep='\t')
+
+    # write fasta
+    to_be_kept_ids = filtered_mt['strain']
+    to_be_removed_ids = filtered_mt[filtered_mt['strain'] not in to_be_kept_ids]
+     # Select and write corresponding fasta
+    filter_fasta(fasta, to_be_removed_ids, outdir + "sequences.fasta")
+    return 
+
+    

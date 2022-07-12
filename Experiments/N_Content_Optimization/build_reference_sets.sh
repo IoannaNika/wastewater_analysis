@@ -1,17 +1,17 @@
 #!/bin/sh
 
 mkdir -p reference_sets
-
+IFS=','
 for n_content in 0.0 0.001 0.01 0.1; do \
     mkdir -p reference_sets/$n_content
-    for reference_set in "Connecticut Connecticut state"  "USA USA country" "North America North_America continent" "Global Global all"; do \
+    for reference_set in "Connecticut,Connecticut,state"  "USA,USA,country" "North America,North_America,continent" "Global,Global,all"; do \
         
         #make tuples 
         set -- $reference_set 
 
         metadata="../../../../GISAID/gisaid_2022_06_12/metadata.tsv"
         sequences="../../../../GISAID/gisaid_2022_06_12/sequences.fasta"
-        location=$1
+        location=$1 
         folder_name=$2
         location_type=$3
         start_date="2021-01-01"

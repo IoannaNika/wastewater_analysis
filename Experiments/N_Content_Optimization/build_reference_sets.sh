@@ -1,9 +1,9 @@
 #!/bin/sh
 
-mkdir reference_sets
+mkdir -p reference_sets
 
 for n_content in 0.0 0.001 0.01 0.1; do \
-    mkdir reference_sets/$n_content
+    mkdir -p reference_sets/$n_content
     for reference_set in "Connecticut Connecticut state"  "USA USA country" "North America North_America continent" "Global Global all"; do \
         
         #make tuples 
@@ -17,9 +17,9 @@ for n_content in 0.0 0.001 0.01 0.1; do \
         start_date="2021-01-01"
         end_date="2021-03-31"
 
-        mkdir reference_sets/$n_content/$folder_name
+        mkdir -p reference_sets/$n_content/$folder_name
 
-        if location_type == "all" then
+        if $location_type == "all" then
             # preprocess references
             python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $enddate --max_N_content $n_content
         else

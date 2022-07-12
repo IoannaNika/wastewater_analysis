@@ -1,0 +1,4 @@
+build_reference_sets.sh: line 23: syntax error near unexpected token `else'
+build_reference_sets.sh: line 23: `        else '
+srun: error: insy13: task 0: Exited with exit code 2
+srun: launch/slurm: _step_signal: Terminating StepId=7407693.0

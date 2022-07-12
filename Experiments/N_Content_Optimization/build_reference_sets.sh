@@ -1,3 +1,5 @@
+#!/bin/sh
+
 mkdir reference_sets
 
 for n_content in 0.0 0.001 0.01 0.1; do \
@@ -17,13 +19,13 @@ for n_content in 0.0 0.001 0.01 0.1; do \
 
         mkdir reference_sets/$n_content/$folder_name
 
-        if location_type == "all":
+        if location_type == "all" then
             # preprocess references
-            python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $enddate
-        else 
+            python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $enddate --max_N_content $n_content
+        else
             # preprocess references
-            python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $enddate --$location_type $location
-        
+            python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $enddate --$location_type $location --max_N_content $n_content
+        fi
         # calculate within lineage variation
         bash ../../../pipeline/pipeline/call_variants.sh reference_sets/$n_content/$folder_name /tudelft.net/staff-umbrella/SARSCoV2Wastewater/inika/wastewater_analysis/data/Original_SARS-CoV-2_sequence/SARS-CoV-2-NC_045513.fa
         # select samples

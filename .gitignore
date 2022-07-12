@@ -12,6 +12,7 @@ Experiments/**/reference_sets/**
 **/*.tsv
 **/*.h5
 **/run_info.json
+**/*.out
 
 # exclude pattern
 

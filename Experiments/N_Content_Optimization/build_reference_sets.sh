@@ -7,8 +7,8 @@ for n_content in 0.0 0.001 0.01 0.1; do \
         #make tuples 
         set -- $reference_set 
 
-        metadata="../../GISAID/gisaid_2022_06_12/metadata.tsv"
-        sequences="../../GISAID/gisaid_2022_06_12/sequences.fasta"
+        metadata="../../../../GISAID/gisaid_2022_06_12/metadata.tsv"
+        sequences="../../../../GISAID/gisaid_2022_06_12/sequences.fasta"
         location=$1
         folder_name=$2
         location_type=$3

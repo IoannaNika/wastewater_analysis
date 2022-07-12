@@ -5,8 +5,8 @@
 #SBATCH --time=2:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=6144
+#SBATCH --mem=40960
 #SBATCH --mail-type=END
 #SBATCH --gres=gpu
 
-srun bash build_reference_sets.sh
+run bash build_reference_sets.sh

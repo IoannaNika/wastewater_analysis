@@ -21,15 +21,15 @@ for n_content in 0.0 0.001 0.01 0.1; do \
 
         if $location_type == "all"; then
             # preprocess references
-            python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $enddate --max_N_content $n_content
+            python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $enddate --max_N_content $n_content
         else
             # preprocess references
-            python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $enddate --$location_type $location --max_N_content $n_content
+            python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $enddate --$location_type $location --max_N_content $n_content
         fi
         # calculate within lineage variation
-        bash ../../../pipeline/pipeline/call_variants.sh reference_sets/$n_content/$folder_name /tudelft.net/staff-umbrella/SARSCoV2Wastewater/inika/wastewater_analysis/data/Original_SARS-CoV-2_sequence/SARS-CoV-2-NC_045513.fa
+        bash ../../pipeline/pipeline/call_variants.sh reference_sets/$n_content/$folder_name /tudelft.net/staff-umbrella/SARSCoV2Wastewater/inika/wastewater_analysis/data/Original_SARS-CoV-2_sequence/SARS-CoV-2-NC_045513.fa
         # select samples
-        python ../../../pipeline/pipeline/select_samples.py -m $metadata -f $sequences -o reference_sets/$n_content/$folder_name --vcf reference_sets/$n_content/$folder_name/*_merged.vcf.gz --freq reference_sets/$n_content/$folder_name/*_merged.frq
+        python ../../pipeline/pipeline/select_samples.py -m $metadata -f $sequences -o reference_sets/$n_content/$folder_name --vcf reference_sets/$n_content/$folder_name/*_merged.vcf.gz --freq reference_sets/$n_content/$folder_name/*_merged.frq
 
         #build kallisto index
         kallisto index -i reference_sets/$n_content/$folder_name/sequences.kallisto_idx  reference_sets/$n_content/$folder_name/sequences.fasta

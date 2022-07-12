@@ -176,14 +176,14 @@ def read_metadata(metadata_file, max_N_content, min_seq_len, pango_lineage_var):
     df = df.loc[df[pango_lineage_var].notna()]
     df = df.loc[df[pango_lineage_var] != "None"]
     # remove samples which are marked as incomplete or N-content > threshold
-    # df = df.astype({"Is complete?" : 'bool',
-    #                 "N-Content" : 'float',
-    #                 "Sequence length" : 'int'})
-    # df["N-Content"] = df["N-Content"].fillna(0)
-    # df = df.loc[
-    #         (df["Is complete?"] == True) & \
-    #         (df["N-Content"] <= max_N_content) & \
-    #         (df["length"] >= min_seq_len)]
+    df = df.astype({"Is complete?" : 'bool',
+                    "N-Content" : 'float',
+                    "Sequence length" : 'int'})
+    df["N-Content"] = df["N-Content"].fillna(0)
+    df = df.loc[
+            (df["Is complete?"] == True) & \
+            (df["N-Content"] <= max_N_content) & \
+            (df["length"] >= min_seq_len)]
     return df
 
 

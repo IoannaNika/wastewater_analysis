@@ -13,19 +13,29 @@ for n_content in 0.0 0.001 0.01 0.1; do \
         sequences="../../../../GISAID/gisaid_2022_06_12/sequences.fasta"
         location=$1
         folder_name=$2
-        location_type="--$3"
+        location_type=$3
         start_date="2021-01-01"
         end_date="2021-03-31"
 
         mkdir -p reference_sets/$n_content/$folder_name
 
-        if $location_type == "--all"; then
+        if $location_type == "all"; then
             # preprocess references
             python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $end_date --max_N_content $n_content
-        else
-            # preprocess references
-            python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $end_date $location_type $location --max_N_content $n_content
         fi
+
+        if $location_type == "continent"; then
+            # preprocess references
+            python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $end_date --continent $location --max_N_content $n_content
+        fi
+        if $location_type == "continent"; then
+            # preprocess references
+            python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $end_date --country $location --max_N_content $n_content
+        fi 
+        if $location_type == "state"; then
+            # preprocess references
+            python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $end_date --state $location --max_N_content $n_content
+        fi 
         # calculate within lineage variation
         bash ../../pipeline/pipeline/call_variants.sh reference_sets/$n_content/$folder_name /tudelft.net/staff-umbrella/SARSCoV2Wastewater/inika/wastewater_analysis/data/Original_SARS-CoV-2_sequence/SARS-CoV-2-NC_045513.fa
         # select samples

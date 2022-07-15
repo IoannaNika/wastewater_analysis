@@ -23,7 +23,6 @@ def main():
     parser.add_argument('--seed', dest='seed', default=0, type=int, help="random seed for sequence selection")
     parser.add_argument('-o, --outdir', dest='outdir', type=str, default="seqs_per_lineage", help="output directory")
     parser.add_argument('--verbose', action='store_true')
-    parser.add_argument('--pango_lin', dest= "pango_lineage_var", type=str, default="Pango lineage", help="header for lineage")
     args = parser.parse_args()
 
     # create output directory

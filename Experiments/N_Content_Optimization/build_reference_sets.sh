@@ -3,7 +3,7 @@
 mkdir -p reference_sets
 IFS=','
 for n_content in 0.0 0.001 0.01 0.1; do \
-    mkdir -p reference_sets/$n_content
+    mkdir -p reference_sets/${n_content}
     for reference_set in "Connecticut,Connecticut,state"  "USA,USA,country" "North America,North_America,continent" "Global,Global,all"; do \
         
         #make tuples 

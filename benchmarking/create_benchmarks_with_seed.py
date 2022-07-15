@@ -36,7 +36,7 @@ def main():
     VOC_names = [filepath.split('/')[-1] for filepath in VOC_files]
     exclude_list = [name.split('_')[0] for name in VOC_names]
 
-    full_df = read_metadata(args.metadata, "pangolin_lineage")
+    full_df = read_metadata(args.metadata, "Pango lineage")
     selection_df = select_benchmark_genomes(full_df,
                                             exclude_list)
     # filter fasta according to selection and write new fasta
@@ -97,10 +97,10 @@ def main():
 
 def select_benchmark_genomes(df, exclude_list):
     selection_df = df
-    print(selection_df["pangolin_lineage"].value_counts())
+    print(selection_df["Pango lineage"].value_counts())
     print("\nExcluding VOC lineages {} from selection\n".format(exclude_list))
     selection_df = selection_df.loc[
-                        ~selection_df["pangolin_lineage"].isin(exclude_list)]
+                        ~selection_df["Pango lineage"].isin(exclude_list)]
 
     return selection_df
 

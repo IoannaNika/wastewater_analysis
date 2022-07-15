@@ -1,4 +1,4 @@
-Virus name	Pango lineage	Accession ID	Collection date	Submission date	Location	Is complete?	N-Content
+Virus name	Type	Accession ID	Collection date	Location	Additional location information	Sequence length	Host	Patient age	Gender	Clade	Pango lineage	Pangolin version	Variant	AA Substitutions	Submission date	Is reference?	Is complete?	Is high coverage?	Is low coverage?	N-Content	GC-Content	date
 NC_045512.2	SARS-CoV-2	ref1	2020-01-01	2020-01-01	 NA / NA / NA	True	0
 MT188341.1	SARS-CoV-2	ref2	2020-01-01	2020-01-01	 NA / NA / NA	True	0
 MT188339.1	SARS-CoV-2	ref3	2020-01-01	2020-01-01	 NA / NA / NA	True	0

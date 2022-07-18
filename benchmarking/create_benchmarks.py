@@ -13,7 +13,7 @@ from select_samples import filter_fasta, read_metadata
 def main():
     parser = argparse.ArgumentParser(description="Create wastewater benchmarks.")
     parser.add_argument('-m, --metadata', dest='metadata', type=str, help="metadata tsv file for full sequence database")
-    parser.add_argument('-s, --state', dest='state', type=str, default="Connecticut", help="sample location")
+    parser.add_argument('-s, --state', dest='state', type=str, default="North America / USA / Connecticut", help="sample location")
     parser.add_argument('-d, --date', dest='date', type=str, default="2021-02-11", help="sample date")
     parser.add_argument('-fr, --fasta_ref', dest='fasta_ref', required=True, type=str, help="fasta file representing full sequence database")
     parser.add_argument('-fv, --fasta_voc', dest='fasta_VOC', required=True, type=str, help="comma-separated list of fasta files for Variants Of Concern (VOC)")
@@ -36,7 +36,7 @@ def main():
     VOC_names = [filepath.split('/')[-1] for filepath in VOC_files]
     exclude_list = [name.split('_')[0] for name in VOC_names]
 
-    full_df = read_metadata(args.metadata, "Pango lineage")
+    full_df = read_metadata(args.metadata)
     selection_df = select_benchmark_genomes(full_df, args.state, args.date,
                                             exclude_list)
     # filter fasta according to selection and write new fasta
@@ -97,7 +97,7 @@ def main():
 
 def select_benchmark_genomes(df, state, date, exclude_list):
     """Select genomes by location and date"""
-    state_df = df.loc[df["division"] == state]
+    state_df = df.loc[df["Location"] == state]
     selection_df = state_df.loc[state_df["date"] == date]
     print("\nLineage counts for {} on {}:".format(state, date))
     print(selection_df["Pango lineage"].value_counts())

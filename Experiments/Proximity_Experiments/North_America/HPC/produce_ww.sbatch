@@ -9,4 +9,4 @@
 #SBATCH --mail-type=END
 #SBATCH --gres=gpu
 
-bash produce_ww.sh
+bash produce_ww_hpc.sh

@@ -20,14 +20,14 @@ for reference_set in "Massachusetts,Massachusetts,state", "Indiana,Indiana,state
 
     if [[ "$location_type" == "all" ]] ; then
         # preprocess references
-        python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$folder_name --startdate $start_date --enddate $end_date --max_N_content $n_content
+        python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$folder_name --startdate $start_date --enddate $end_date --max_N_content $n_content
     elif [[ "$location_type" == "continent" ]] ; then
         # preprocess references
-        python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$folder_name --startdate $start_date --enddate $end_date --continent $location --max_N_content $n_content
+        python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$folder_name --startdate $start_date --enddate $end_date --continent $location --max_N_content $n_content
     
     elif [[ "$location_type" == "country" ]] ; then
         # preprocess references
-        python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$folder_name --startdate $start_date --enddate $end_date --country $location --max_N_content $n_content
+        python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$folder_name --startdate $start_date --enddate $end_date --country $location --max_N_content $n_content
 
     else [[ "$location_type" == "state" ]]
         # preprocess references

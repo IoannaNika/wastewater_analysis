@@ -26,7 +26,7 @@ for n_content in 0.0 0.001 0.01 0.1; do \
             # preprocess references
             python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $end_date --continent $location --max_N_content $n_content
         
-        elif [[ "$location_type" == "continent" ]] ; then
+        elif [[ "$location_type" == "country" ]] ; then
             # preprocess references
             python ../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o reference_sets/$n_content/$folder_name --startdate $start_date --enddate $end_date --country $location --max_N_content $n_content
 

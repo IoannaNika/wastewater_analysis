@@ -7,12 +7,14 @@ import subprocess
 import pandas as pd
 from random import randint
 
-from pipeline.select_samples import filter_fasta, read_metadata
+from select_samples import filter_fasta, read_metadata
 
 
 def main():
     parser = argparse.ArgumentParser(description="Create wastewater benchmarks.")
     parser.add_argument('-m, --metadata', dest='metadata', type=str, help="metadata tsv file for full sequence database")
+    parser.add_argument('-s, --state', dest='state', type=str, default="North America / USA / Connecticut", help="sample location")
+    parser.add_argument('-d, --date', dest='date', type=str, default="2021-02-11", help="sample date")
     parser.add_argument('-fr, --fasta_ref', dest='fasta_ref', required=True, type=str, help="fasta file representing full sequence database")
     parser.add_argument('-fv, --fasta_voc', dest='fasta_VOC', required=True, type=str, help="comma-separated list of fasta files for Variants Of Concern (VOC)")
     parser.add_argument('-o, --outdir', dest='outdir', required=True, type=str, help="output directory")
@@ -23,7 +25,7 @@ def main():
     parser.add_argument('--seed', dest='seed', default=1, type=int, help="random seed")
     args = parser.parse_args()
 
-    # create output directory
+     # create output directory
     try:
         os.mkdir(args.outdir)
     except FileExistsError:
@@ -32,12 +34,11 @@ def main():
     VOC_frequencies = args.voc_perc.split(',')
     total_cov = args.total_cov
     VOC_files = args.fasta_VOC.split(',')
-    # remove the voc measured from the benchmark data
     VOC_names = [filepath.split('/')[-1] for filepath in VOC_files]
     exclude_list = [name.split('_')[0] for name in VOC_names]
 
-    full_df = read_metadata(args.metadata, "Pango lineage")
-    selection_df = select_benchmark_genomes(full_df,
+    full_df = read_metadata(args.metadata)
+    selection_df = select_benchmark_genomes(full_df, args.state, args.date,
                                             exclude_list)
     # filter fasta according to selection and write new fasta
     fasta_selection = args.outdir + "/sequences.fasta"
@@ -95,14 +96,15 @@ def main():
     return
 
 
-def select_benchmark_genomes(df, exclude_list):
-    selection_df = df
+def select_benchmark_genomes(df, state, date, exclude_list):
+    """Select genomes by location and date"""
+    state_df = df.loc[df["Location"] == state]
+    selection_df = state_df.loc[state_df["date"] == date]
+    print("\nLineage counts for {} on {}:".format(state, date))
     print(selection_df["Pango lineage"].value_counts())
     print("\nExcluding VOC lineages {} from selection\n".format(exclude_list))
     selection_df = selection_df.loc[
                         ~selection_df["Pango lineage"].isin(exclude_list)]
-
-    return selection_df
 
 
 if __name__ == "__main__":

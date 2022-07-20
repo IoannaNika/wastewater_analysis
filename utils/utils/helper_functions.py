@@ -34,6 +34,47 @@ def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq
     
     return 
 
+def output_results_to_json_2_dirs(threshold, first_dirs, second_dirs, abundances, seq_name):
+    
+    all_files = getListOfFiles("kallisto_predictions/")
+    lineage_measured = seq_name.split("_")[0]
+    results = dict()
+
+    for first_dir in first_dirs:
+        results[first_dir] = dict()
+        for second_dir in second_dirs:
+            results[first_dir][second_dir] = dict()
+            for ab in abundances:
+                path = "kallisto_predictions/{}/{}/{}_ab{}/predictions_m{}.tsv".format(first_dir, second_dir, seq_name, ab, threshold)
+                res_files = list(filter(lambda p: path in p, all_files))
+                predictions_df = pd.read_csv(res_files[0],sep='\t',skiprows=3, header = None)
+
+                for i in range(0, len(predictions_df)):
+                    if predictions_df[0][i] == lineage_measured:
+                        results[first_dir][second_dir][ab]= predictions_df[3][i]
+                        break
+                
+                    if ab not in results[first_dir][second_dir].keys():
+                        results[first_dir][second_dir][ab] = 0
+            
+    with open('results.json', 'w') as f:
+        json.dump(results, f)
+    
+    return 
+
+# calculate absolute errors for results saved  2 directories deep.
+def calculate_absolute_errors_2_dir(results, first_dirs, second_dirs, abundances):
+    abs_errors = dict()
+
+    for first_dir in first_dirs: 
+        abs_errors[first_dir] = dict()
+        for second_dir in second_dirs:
+            abs_errors[first_dir][second_dir] = dict()
+            for ab in abundances:
+                absolute_error = round(abs(ab - results[str(first_dir)][second_dir][str(ab)]), 3)
+                abs_errors[first_dir][second_dir][str(ab)] = absolute_error
+    return abs_errors
+
 # Output predictions as json file for allele frequency experiments
 def output_results_to_json_3_dirs(first_dir, threshold, second_dirs, third_dirs, abundances, seq_name):
     

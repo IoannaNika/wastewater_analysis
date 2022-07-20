@@ -79,7 +79,7 @@ def main():
                 print("ERROR: abundance file format not recognized as kallisto or salmon")
                 sys.exit(1)
             seqname = line[0].split('|')[0]
-            lineage = df.loc[df["strain"] == seqname][pango_lineage]
+            lineage = df.loc[df["Virus name"] == seqname][pango_lineage]
             if lineage.empty:
                 print("ERROR: sequence {} not found in metadata".format(seqname))
             lineage = lineage.iloc[0]

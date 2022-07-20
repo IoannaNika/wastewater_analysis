@@ -5,7 +5,7 @@ IFS=','
 n_content=0.0
 for reference_set in "Massachusetts,Massachusetts,state", "Indiana,Indiana,state","Connecticut,Connecticut,state"  "USA,USA,country" "North America,North_America,continent" "Global,Global,all"; do \
     
-    #make tuples 
+    # make tuples 
     set -- $reference_set 
 
     metadata="../../../../../GISAID/gisaid_2022_06_12/metadata.tsv"

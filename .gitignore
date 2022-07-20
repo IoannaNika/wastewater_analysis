@@ -13,6 +13,8 @@ Experiments/**/reference_sets/**
 **/*.h5
 **/run_info.json
 **/*.out
+**/lineages.txt
+**/*.kallisto_idx
 
 # exclude pattern
 

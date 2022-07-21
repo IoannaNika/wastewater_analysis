@@ -40,6 +40,7 @@ def main():
     full_df = read_metadata(args.metadata)
     selection_df = select_benchmark_genomes(full_df, args.state, args.date,
                                             exclude_list)
+    print("HRE",full_df)
     # filter fasta according to selection and write new fasta
     fasta_selection = args.outdir + "/sequences.fasta"
     filter_fasta(args.fasta_ref, fasta_selection, selection_df)
@@ -105,7 +106,7 @@ def select_benchmark_genomes(df, state, date, exclude_list):
     print("\nExcluding VOC lineages {} from selection\n".format(exclude_list))
     selection_df = selection_df.loc[
                         ~selection_df["Pango lineage"].isin(exclude_list)]
-
+    return selection_df
 
 if __name__ == "__main__":
     sys.exit(main())

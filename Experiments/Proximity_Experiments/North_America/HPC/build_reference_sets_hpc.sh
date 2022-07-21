@@ -2,7 +2,7 @@
 
 mkdir -p reference_sets
 IFS=','
-n_content=0.0
+n_content=0.001
 for reference_set in "Massachusetts,Massachusetts,state", "Indiana,Indiana,state","Connecticut,Connecticut,state"  "USA,USA,country" "North America,North_America,continent" "Global,Global,all"; do \
     
     # make tuples 

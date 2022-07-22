@@ -18,7 +18,7 @@ def main():
     args = parser.parse_args()
 
     df = pd.read_csv(args.metadata, sep='\t', header=0, dtype=str)
-
+    pango_lineage="Pango lineage"
     if args.out_file:
         outfile = args.out_file
     else:
@@ -37,13 +37,14 @@ def main():
         print("Outputting abundance for ALL reference sequences")
         variants_dict = {}
 
-    # print(variants_dict)
+    print(variants_dict)
 
     lineage_to_variant = {}
     if args.voc or args.voc_file:
         abundance_dict = {variant : [0, 0] for variant in variants_dict.keys()}
         for variant, lineages in variants_dict.items():
             for lineage in lineages:
+                print(lineage, lineage_to_variant.keys())
                 assert lineage not in lineage_to_variant.keys()
                 lineage_to_variant[lineage] = variant
     else:

@@ -44,7 +44,7 @@ def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_error
                 ax.grid("white")
                 ax.set_yticks((0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100))
                 ax.set_ylabel("Absolute prediction error", fontsize = 8)
-                ax.set_ylim(0,100)
+                ax.set_ylim(0,110)
                 ax.tick_params(axis='both', labelsize=6)
                 ax.label_outer()
 

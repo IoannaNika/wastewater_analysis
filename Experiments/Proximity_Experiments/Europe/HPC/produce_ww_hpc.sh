@@ -11,7 +11,7 @@ for state in "Gelderland,Gelderland,Netherlands" "Madrid,Madrid,Spain" "Northern
     for seed in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do \
             mkdir -p benchmarks/$folder_name/$seed
             
-            python ../../../../benchmarking/create_benchmarks_with_seed.py --voc_perc 1,2,3,4,5,6,7,8,9,10,20,30,40,50,60,70,80,90,100 -m $metadata -fr $sequences -fv ../../../../data/Proximity_Experiments/HPC/North_America/VOC_sequences/${folder_name}/B.1.1.7_sequence.fasta -o benchmarks/${folder_name}/$seed --total_cov 100 -s "Europe / ${country} / ${state}" -d 2021-02-28 --seed $seed
+            python ../../../../benchmarking/create_benchmarks_with_seed.py --voc_perc 1,2,3,4,5,6,7,8,9,10,20,30,40,50,60,70,80,90,100 -m $metadata -fr $sequences -fv ../../../../data/Proximity_Experiments/HPC/Europe/${folder_name}/B.1.1.7_sequence.fasta -o benchmarks/${folder_name}/$seed --total_cov 100 -s "Europe / ${country} / ${state}" -d 2021-02-28 --seed $seed
 
         # cleanup intermidiate files
         for file in benchmarks/$folder_name/$seed/*; do \

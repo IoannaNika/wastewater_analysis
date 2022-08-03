@@ -5,9 +5,12 @@ from Bio import SeqIO
 import time
 
 # Output predictions as json file for proximity experiments
-def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq_name):
+def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq_name, prediction_level="lineage", VOC=None):
     
-    all_files = getListOfFiles("kallisto_predictions/" + dir_name)
+    if prediction_level == "lineage":
+        all_files = getListOfFiles("kallisto_predictions/" + dir_name)
+    if prediction_level == "VOC":
+        all_files = getListOfFiles("kallisto_predictions_who/" + dir_name)
     lineage_measured = seq_name.split("_")[0]
     results = dict()
 
@@ -17,20 +20,33 @@ def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq
             results[ref_set][seed] = dict()
             for ab in abundances:
                 print(ref_set, seed, ab)
-                path = "kallisto_predictions/{}/{}/{}/{}_ab{}/predictions_m{}.tsv".format(dir_name,ref_set, seed, seq_name, ab, threshold)
+                if prediction_level == "lineage":
+                    path = "kallisto_predictions/{}/{}/{}/{}_ab{}/predictions_m{}.tsv".format(dir_name,ref_set, seed, seq_name, ab, threshold)
+                if prediction_level == "VOC":
+                    path = "kallisto_predictions_who/{}/{}/{}/{}_ab{}/predictions_m{}.tsv".format(dir_name,ref_set, seed, seq_name, ab, threshold)
                 res_files = list(filter(lambda p: path in p, all_files))
                 predictions_df = pd.read_csv(res_files[0],sep='\t',skiprows=3, header = None)
 
                 for i in range(0, len(predictions_df)):
-                    if predictions_df[0][i] == lineage_measured:
-                        results[ref_set][seed][ab]= predictions_df[2][i]
-                        break
+                    if VOC == None:
+                        if predictions_df[0][i] == lineage_measured:
+                            results[ref_set][seed][ab]= predictions_df[2][i]
+                            break
+                    else : 
+                        if predictions_df[0][i] == VOC:
+                            results[ref_set][seed][ab]= predictions_df[2][i]
+                            break 
                 
                     if ab not in results[ref_set][seed].keys():
                         results[ref_set][seed][ab] = 0
-        
-    with open(dir_name + "_results.json", 'w') as f:
-        json.dump(results, f)
+
+    if prediction_level == "lineage":    
+        with open("results/" + dir_name + "_results.json", 'w') as f:
+            json.dump(results, f)
+    if prediction_level == "VOC":
+        with open("results/" + dir_name + "_results_who.json", 'w') as f:
+            json.dump(results, f)
+
     
     return 
 

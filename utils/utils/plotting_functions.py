@@ -3,9 +3,11 @@ from re import A
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from numpy import size
+import numpy as np
+import pandas as pd
 
-def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_errors, outdir):
-    
+def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_errors, outdir, absolute_errors_who=None):
+
     fig = plt.figure(figsize=(20, 10))
     fig.set_dpi(100)
     outer = gridspec.GridSpec(2, 3, wspace=0.2, hspace=0.2)
@@ -39,14 +41,28 @@ def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_error
             for j, abundances, scale in zip(range(2), [[1,2,3,4,5,6,7,8,9,10], [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]], [[0, 10], [9, 20]]):
                 ax = plt.Subplot(fig, inner[j])
                 fig.add_subplot(ax)
-                ax.boxplot(list(list(item.values())for item in absolute_errors[reference_set].values())[scale[0]: scale[1]])
-                ax.set_xticklabels(abundances)
+                if absolute_errors_who == None:
+                    ax.boxplot(list(list(item.values())for item in absolute_errors[reference_set].values())[scale[0]: scale[1]])
+                    ax.set_xticklabels(abundances)
+                else:
+                    bp0= ax.boxplot(list(list(item.values())for item in absolute_errors[reference_set].values())[scale[0]: scale[1]],  patch_artist=False)
+                    bp1 = ax.boxplot(list(list(item.values())for item in absolute_errors_who[reference_set].values())[scale[0]: scale[1]],  patch_artist=False)
+
+                    for box in bp1['boxes']:
+                        box.set(color='blue')
+                    
+                    for box in bp0['boxes']:
+                        box.set(color='purple')
+
+                    ax.legend([bp0["boxes"][0], bp1["boxes"][0]], ['Predictions at lineage level', 'Predictions at VOC level'], prop={'size': 6})
+
                 ax.grid("white")
                 ax.set_yticks((0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100))
                 ax.set_ylabel("Absolute prediction error", fontsize = 8)
                 ax.set_ylim(0,110)
                 ax.tick_params(axis='both', labelsize=6)
                 ax.label_outer()
+
 
                 if num_of_figures == 5 and i == 3 and j == 0:
                     ax.set_position([0.24,0.125,0.228/2,0.343])
@@ -56,9 +72,11 @@ def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_error
                     ax.set_position([0.55, 0.125,0.228/2,0.343])
                 if num_of_figures == 5 and i == 4 and j == 1:
                     ax.set_position([0.55 + 0.24/2,0.125,0.228/2,0.343])
-    # save absolute error as pdf in figures folder
-    plt.savefig(outdir + "boxplot_results.pdf", bbox_inches='tight')
-            
+
+    if absolute_errors_who == None:
+        plt.savefig(outdir + "boxplot_results.pdf", bbox_inches='tight')
+    else:
+        plt.savefig(outdir + "boxplot_results_who.pdf", bbox_inches='tight')
     return 
 
 def plot_with_line_plots_two_scales(continents, ref_sets_dict, absolute_errors, outdir, allele_freqs):

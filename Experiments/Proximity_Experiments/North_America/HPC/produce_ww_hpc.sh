@@ -3,6 +3,9 @@ metadata="../../../../../../GISAID/gisaid_2022_06_12/metadata.tsv"
 sequences="../../../../../../GISAID/gisaid_2022_06_12/sequences.fasta"
 
 for state in "Connecticut" "Massachusetts" "Indiana"; do \
+    # metadata="../../../../data/Proximity_Experiments/HPC/North_America/benchmarks_who/benchmarks/${state}/metadata.tsv"
+    # sequences="../../../../data/Proximity_Experiments/HPC/North_America/benchmarks_who/benchmarks/${state}/sequences.fasta"
+
     mkdir -p benchmarks/$state 
     for seed in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do \
             mkdir -p benchmarks/$state/$seed

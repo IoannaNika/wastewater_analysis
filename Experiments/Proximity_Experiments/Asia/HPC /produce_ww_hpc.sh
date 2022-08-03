@@ -3,7 +3,7 @@ metadata="../../../../../../GISAID/gisaid_2022_06_12/metadata.tsv"
 sequences="../../../../../../GISAID/gisaid_2022_06_12/sequences.fasta"
 
 IFS=','
-for state in "Haryana,Haryana,2021-02-27" "Rajasthan,Rajasthan,2021-02-26" "West_Bengal,West Bengal,2021-02-26"; do \
+for state in "Haryana,Haryana,2021-02-27" "Maharashtra,Maharashtra,2021-03-01" "Delhi,Delhi,2021-03-01"; do \
     set -- $state
     folder_name=$1
     state=$2

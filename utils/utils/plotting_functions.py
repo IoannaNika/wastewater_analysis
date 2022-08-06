@@ -41,13 +41,14 @@ def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_error
             for j, abundances, scale in zip(range(2), [[1,2,3,4,5,6,7,8,9,10], [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]], [[0, 10], [9, 20]]):
                 ax = plt.Subplot(fig, inner[j])
                 fig.add_subplot(ax)
+                ax.set_xticklabels(abundances)
                 if absolute_errors_who == None:
                     ax.boxplot(list(list(item.values())for item in absolute_errors[reference_set].values())[scale[0]: scale[1]])
                     ax.set_xticklabels(abundances)
                 else:
                     bp0= ax.boxplot(list(list(item.values())for item in absolute_errors[reference_set].values())[scale[0]: scale[1]],  patch_artist=False)
                     bp1 = ax.boxplot(list(list(item.values())for item in absolute_errors_who[reference_set].values())[scale[0]: scale[1]],  patch_artist=False)
-
+                
                     for box in bp1['boxes']:
                         box.set(color='blue')
                     
@@ -55,13 +56,14 @@ def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_error
                         box.set(color='purple')
 
                     ax.legend([bp0["boxes"][0], bp1["boxes"][0]], ['Predictions at lineage level', 'Predictions at VOC level'], prop={'size': 6})
-
+                   
                 ax.grid("white")
                 ax.set_yticks((0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100))
                 ax.set_ylabel("Absolute prediction error", fontsize = 8)
                 ax.set_ylim(0,110)
                 ax.tick_params(axis='both', labelsize=6)
                 ax.label_outer()
+                
 
 
                 if num_of_figures == 5 and i == 3 and j == 0:

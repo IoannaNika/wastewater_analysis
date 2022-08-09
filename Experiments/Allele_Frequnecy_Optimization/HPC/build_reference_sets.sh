@@ -32,7 +32,7 @@ for reference_set in \
     python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 0 -o $outpout_dir_main --startdate $start_date --enddate $end_date
 
     #calculate within lineage variation
-    bash ../../../pipeline/pipeline/call_variants.sh $outpout_dir_main /Users/ioanna/Projects/wastewater_analysis/data/Original_SARS-CoV-2_sequence/SARS-CoV-2-NC_045513.fasta
+    bash ../../../pipeline/pipeline/call_variants.sh $outpout_dir_main /tudelft.net/staff-umbrella/SARSCoV2Wastewater/inika/wastewater_analysis/data/Original_SARS-CoV-2_sequence/SARS-CoV-2-NC_045513.fa
 
     for min_freq in 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 ; do \
         outpout_dir=reference_sets/$1_$min_freq

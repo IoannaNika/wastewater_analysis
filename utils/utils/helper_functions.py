@@ -173,26 +173,27 @@ def calculate_absolute_errors_af(results_dict, allele_freqs, abundances, ref_set
 # a the fasta file with the resulting sequences are saved under
 # the name of the target file provided as input.
 def filter_fasta(fasta_file, identifiers, target_file):
-    print(len(identifiers), " sequences to be removed")
-    
     if os.path.exists(target_file):
         os.remove(target_file)
-    
+        
     seqs = []
-    
+    total_num_of_seqs  = 0
     for seq in SeqIO.parse(fasta_file, "fasta"):
-        if (identifiers.count(seq.description.strip()) == 0):
+        total_num_of_seqs+=1
+        if (identifiers.count(seq.description.strip()) == 0) and (identifiers.count(seq.description.strip().split("|")[0]) == 0):
             seqs.append(seq) 
-    
+
+    print("Total number of sequences: ", total_num_of_seqs)
+    print(len(identifiers), " sequences to be removed")
+    print(len(seqs), "sequences reamin")
+
     print("Writing sequences: ", len(seqs))
     # Write sequences to file
     with open(target_file, "w") as target:
         SeqIO.write(seqs, target, "fasta")
 
     print("Done, results can be found in "  + target_file)
-
     f_ids = parse_fasta(target_file)
-    print("Final number of sequences : ", len(f_ids))
     return
 
 
@@ -227,10 +228,10 @@ def filter_dataset_by_date(metadata_inpt, fasta, outdir, start_date, end_date):
 
     # read metadata 
     metadata_df = pd.read_csv(metadata_inpt, sep='\t', dtype=str)
-    initial_identifiers = metadata_df['strain']
+    initial_identifiers = metadata_df['Virus name']
     # filter metadata based on date
     metadata_df = metadata_df[(metadata_df['date'] >= start_date) & (metadata_df['date'] <= end_date)]
-    to_be_kept_identifiers = metadata_df['strain']
+    to_be_kept_identifiers = metadata_df['Virus name']
 
     to_be_removed_identifiers = list(initial_identifiers[~initial_identifiers.isin(to_be_kept_identifiers)])
 
@@ -274,6 +275,26 @@ def output_dataset_info(lineage, metadata_dir, selection_metadata_dir):
 
     return 
 
+def find_amount_of_lineage(lineage, metadata_dir, startsWithOnly=False):
+    # read metadata
+    select_mt_file = pd.read_csv(metadata_dir + "/metadata.tsv", sep='\t')
+
+    # find lineage
+    if startsWithOnly:
+        sum = 0
+        lineages = list(filter(lambda x: (x.startswith(lineage)), set(select_mt_file["Pango lineage"])))
+        print("lineages found that match pattern:", lineages)
+        for lin in lineages:
+            selection_amount_of_lineage_measured_seqs = select_mt_file["Pango lineage"].value_counts()[lin]
+            sum += selection_amount_of_lineage_measured_seqs
+
+        print("Amount of sequences that match pattern :", sum)
+    else:
+        selection_amount_of_lineage_measured_seqs = select_mt_file["Pango lineage"].value_counts()[lineage]
+        print("Amount of sequences for lineage given :", selection_amount_of_lineage_measured_seqs)
+
+    return 
+
 def merge_csv_from_subdirectory(directory, down_dir_name, remove_files):
     if os.path.exists(directory + "/dataset_info.csv"):
         os.remove(directory + "/dataset_info.csv")
@@ -298,7 +319,7 @@ def merge_csv_from_subdirectory(directory, down_dir_name, remove_files):
         
     return
 
-
+# Note: Not appropriate for  all metadata formats.
 def filter_by_location_and_time(locations, location_type, start_date, end_date, metadata, fasta, outdir):
 
     # read metadata

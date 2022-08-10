@@ -5,7 +5,7 @@ import argparse
 import itertools
 
 
-from utils.helper_functions import filter_fasta
+from helper_functions import filter_fasta
 
 
 
@@ -51,17 +51,17 @@ def main():
 
     # filter metadata based on start date
     if args.start_date:
-        keep_mt = metadata_df[(metadata_df['date'] >=  args.start_date)]
+        keep_mt = metadata_df[(metadata_df['Collection date'] >=  args.start_date)]
         to_be_removed_ids_all.append(list(initial_identifiers[~initial_identifiers.isin(keep_mt["Virus name"])]))
 
     # filter metadata based on end date
     if args.end_date:
-        keep_mt = metadata_df[(metadata_df['date'] <= args.end_date)]
+        keep_mt = metadata_df[(metadata_df['Collection date'] <= args.end_date)]
         to_be_removed_ids_all.append(list(initial_identifiers[~initial_identifiers.isin(keep_mt["Virus name"])]))
 
     # filter by location
     if args.state: 
-        keep_mt = list(metadata_df[metadata_df['Location'].str.endswith("/ " + args.state)])
+        keep_mt = metadata_df[metadata_df['Location'].str.endswith("/ " + args.state)]
         to_be_removed_ids_all.append(list(initial_identifiers[~initial_identifiers.isin(keep_mt["Virus name"])]))
 
     if args.country:

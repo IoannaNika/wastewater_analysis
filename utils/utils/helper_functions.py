@@ -30,11 +30,11 @@ def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq
                 for i in range(0, len(predictions_df)):
                     if VOC == None:
                         if predictions_df[0][i] == lineage_measured:
-                            results[ref_set][seed][ab]= predictions_df[2][i]
+                            results[ref_set][seed][ab]= predictions_df[3][i]
                             break
                     else : 
                         if predictions_df[0][i] == VOC:
-                            results[ref_set][seed][ab]= predictions_df[2][i]
+                            results[ref_set][seed][ab]= predictions_df[3][i]
                             break 
                 
                     if ab not in results[ref_set][seed].keys():
@@ -92,32 +92,49 @@ def calculate_absolute_errors_2_dir(results, first_dirs, second_dirs, abundances
     return abs_errors
 
 # Output predictions as json file for allele frequency experiments
-def output_results_to_json_3_dirs(first_dir, threshold, second_dirs, third_dirs, abundances, seq_name):
+def output_results_to_json_3_dirs(first_dir, threshold, second_dirs, third_dirs, abundances, seq_name, prediction_level="lineage", VOC=None):
+    if prediction_level == "lineage":
+        all_files = getListOfFiles("kallisto_predictions/" + first_dir + "/")
+
+    if prediction_level == "VOC":
+        all_files = getListOfFiles("kallisto_predictions_who/" + first_dir + "/")
+
     
-    all_files = getListOfFiles("kallisto_predictions/" + first_dir + "/")
-    lineage_measured = seq_name.split("_")[0]
     results = dict()
+    lineage_measured = seq_name.split("_")[0]
 
     for second_dir in second_dirs:
         results[second_dir] = dict()
         for third_dir in third_dirs:
             results[second_dir][third_dir] = dict()
             for ab in abundances:
-                path = "kallisto_predictions/{}/{}/{}/{}_ab{}/predictions_m{}.tsv".format(first_dir, second_dir, third_dir, seq_name, ab, threshold)
+                print(first_dir, second_dir,third_dir, ab)
+                if prediction_level == "lineage":
+                    path = "kallisto_predictions/{}/{}/{}/{}_ab{}/predictions_m{}.tsv".format(first_dir, second_dir, third_dir, seq_name, ab, threshold)
+                if prediction_level == "VOC":
+                    path = "kallisto_predictions_who/{}/{}/{}/{}_ab{}/predictions_m{}.tsv".format(first_dir, second_dir, third_dir, seq_name, ab, threshold)
+                
                 res_files = list(filter(lambda p: path in p, all_files))
                 predictions_df = pd.read_csv(res_files[0],sep='\t',skiprows=3, header = None)
 
                 for i in range(0, len(predictions_df)):
-                    if predictions_df[0][i] == lineage_measured:
-                        results[second_dir][third_dir][ab]= predictions_df[2][i]
-                        break
+                    if prediction_level == "lineage":
+                        if predictions_df[0][i] == lineage_measured:
+                            results[second_dir][third_dir][ab]= predictions_df[3][i]
+                            break
+                    if prediction_level == "VOC":
+                        if predictions_df[0][i] == VOC:
+                            results[second_dir][third_dir][ab]= predictions_df[3][i]
+                            break
                 
                     if ab not in results[second_dir][third_dir].keys():
                         results[second_dir][third_dir][ab] = 0
-        
-    with open('results_{}.json'.format(first_dir), 'w') as f:
-        json.dump(results, f)
-    
+    if prediction_level == "lineage":    
+        with open('results_{}.json'.format(first_dir), 'w') as f:
+            json.dump(results, f)
+    if prediction_level == "VOC" :
+        with open('results_who_{}.json'.format(first_dir), 'w') as f:
+            json.dump(results, f)
     return 
 
 
@@ -185,7 +202,7 @@ def filter_fasta(fasta_file, identifiers, target_file):
 
     print("Total number of sequences: ", total_num_of_seqs)
     print(len(identifiers), " sequences to be removed")
-    print(len(seqs), "sequences reamin")
+    print(len(seqs), "sequences remain")
 
     print("Writing sequences: ", len(seqs))
     # Write sequences to file

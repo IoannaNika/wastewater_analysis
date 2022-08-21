@@ -100,7 +100,7 @@ def plot_with_line_plots_two_scales(continents, ref_sets_dict, absolute_errors, 
         
         for j, scale in zip(range(2), [[0, 10], [9, 20]]):
                 ax = plt.Subplot(fig, inner[j])
-                if j == 1:
+                if j == 0:
                     range_txt = "one to ten"
                 else: 
                     range_txt = "ten to hundred"

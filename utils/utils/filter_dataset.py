@@ -28,7 +28,9 @@ def main():
 
     # define target files
     target_mt = os.path.join(args.dir_name, "metadata.tsv")
+    print("target file for metadata: ", target_mt, flush=True)
     target_fasta = os.path.join(args.dir_name, "sequences.fasta")
+    print("target file for fasta: ", target_fasta , flush=True)
 
     # delete target files if they exist
     if os.path.exists(target_mt):
@@ -36,13 +38,18 @@ def main():
 
     if os.path.exists(target_fasta):
         os.remove(target_fasta)
-    
+
+    print("creating target files...", flush=True)
     # create target files (metadata) fasta is being created by the function filter_fasta
     open(target_mt, "x")
     open(target_mt, "a")
 
+    print("reading metadata...", flush=True)
     # read metadata 
     metadata_df = pd.read_csv(args.metadata, sep='\t', header=0, dtype=str)
+
+    print("reading metadata: done", flush=True)
+
     initial_identifiers = metadata_df['Virus name']
 
 
@@ -51,36 +58,45 @@ def main():
 
     # filter metadata based on start date
     if args.start_date:
-        keep_mt = metadata_df[(metadata_df['Collection date'] >=  args.start_date)]
+        print("filter on start date", flush=True)
+        keep_mt = metadata_df.loc[(metadata_df['Collection date'] >=  args.start_date)]
         to_be_removed_ids_all.append(list(initial_identifiers[~initial_identifiers.isin(keep_mt["Virus name"])]))
+        print("start date considered for metadata", flush=True)
 
     # filter metadata based on end date
     if args.end_date:
-        keep_mt = metadata_df[(metadata_df['Collection date'] <= args.end_date)]
+        print("filter on end date", flush=True)
+        keep_mt = metadata_df.loc[(metadata_df['Collection date'] <= args.end_date)]
         to_be_removed_ids_all.append(list(initial_identifiers[~initial_identifiers.isin(keep_mt["Virus name"])]))
-
+        print("end date considered for metadata", flush=True)
     # filter by location
     if args.state: 
-        keep_mt = metadata_df[metadata_df['Location'].str.endswith("/ " + args.state)]
+        print("filter on location: state", flush=True)
+        keep_mt = metadata_df.loc[metadata_df['Location'].str.endswith("/ " + args.state)]
         to_be_removed_ids_all.append(list(initial_identifiers[~initial_identifiers.isin(keep_mt["Virus name"])]))
-
+        print("state considered for metadata", flush=True)
     if args.country:
-        keep_mt = metadata_df[metadata_df['Location'].str.contains(" / " + args.country + " / ")]
+        print("filter on location: country", flush=True)
+        keep_mt = metadata_df.loc[metadata_df['Location'].str.contains(" / " + args.country + " / ")]
         to_be_removed_ids_all.append(list(initial_identifiers[~initial_identifiers.isin(keep_mt["Virus name"])]))
-        
+        print("country considered for metadata", flush=True)
     if args.continent:
-        keep_mt = metadata_df[metadata_df['Location'].str.startswith(args.continent)]
+        print("filter on location: continent", flush=True)
+        keep_mt = metadata_df.loc[metadata_df['Location'].str.startswith(args.continent)]
         to_be_removed_ids_all.append(list(initial_identifiers[~initial_identifiers.isin(keep_mt["Virus name"])]))
+        print("continent considered for metadata", flush=True)
 
+    print("writing metadata...", flush=True)
     to_be_removed_ids_all= list(itertools.chain.from_iterable(to_be_removed_ids_all))
     final_mt_df = final_mt_df[~final_mt_df["Virus name"].isin(to_be_removed_ids_all)]
     # write_metadata
     final_mt_df.to_csv(target_mt, sep='\t')
     # Select and write corresponding fasta
+    print("metadata have been written", flush=True)
 
-    
-    filter_fasta(args.fasta, list(set(to_be_removed_ids_all)), target_fasta)
-
+    # print("writing sequences...", flush=True)
+    # filter_fasta(args.fasta, list(set(to_be_removed_ids_all)), target_fasta)
+    # print("write sequences done", flush=True)
     return
 
 if __name__ == "__main__":

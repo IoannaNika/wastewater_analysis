@@ -6,7 +6,7 @@ import argparse
 import subprocess
 import pandas as pd
 from random import randint
-from pipeline.select_samples import filter_fasta, read_metadata
+from select_samples import filter_fasta, read_metadata
 
 
 def main():
@@ -15,7 +15,7 @@ def main():
                                                                           "tsv file for full sequence database")
     parser.add_argument('-s, --state', dest='state', type=str, default="North America / USA / Connecticut",
                         help="sample location")
-    parser.add_argument('-d, --date', dest='date', type=str, default="2021-02-11", help="sample date")
+    parser.add_argument('-d, --date', dest='date', type=str, default="2021-04-30", help="sample date")
 
     # GISAID/half.fasta
     parser.add_argument('-fr, --fasta_ref', dest='fasta_ref', required=True,
@@ -55,7 +55,7 @@ def main():
     print("Exclude list")
     print(exclude_list)
     # Read metadata from tsv into dataframe
-    full_df = read_metadata(args.metadata, "pangolin_lineage")
+    full_df = read_metadata(args.metadata)
     # print('METADATA FILE')
     # print(full_df)
     # Filter metadata file(later we will filter corresponding fasta)
@@ -200,11 +200,11 @@ def select_benchmark_genomes(df, state, date, exclude_list):
     # times it is found in the file according to state and date filtered.
     print("\nLineage counts for {} on {}:".format(state, date))
     # Pango lineage refers to the name the particular virus lineage was given but the pango nomenclature
-    print(selection_df["pangolin_lineage"].value_counts())
+    print(selection_df["Pango lineage"].value_counts())
     print("\nExcluding VOC lineages {} from selection\n".format(exclude_list))
     # ~selection_df
     selection_df = selection_df.loc[
-        ~selection_df["pangolin_lineage"].isin(exclude_list)]
+        ~selection_df["Pango lineage"].isin(exclude_list)]
     # # show number of samples per date
     # samples_per_date = state_df["date"].value_counts().sort_index()
     # print("Samples per date:")

@@ -8,6 +8,8 @@ Experiments/**/reference_sets/**
 **/*.bam
 **/*.sam
 **/*.fasta
+**/*.fastq
+**/*.fa
 **/*.log
 **/*.tsv
 **/*.h5

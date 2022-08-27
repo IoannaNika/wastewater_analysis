@@ -1,6 +1,6 @@
 end_date="2022-01-01"
 
-for ref_set in "Connecticut" "USA"; do \
+for ref_set in "North_America"; do \
     set -- $data
     for start_date in "2020-01-01" "2020-06-01" "2021-01-01" "2021-06-01"; do \
         ref_set_path="../../../data/Timeframe_Experiments/HPC/reference_sets/$ref_set/${start_date}_till_${end_date}/processed"        

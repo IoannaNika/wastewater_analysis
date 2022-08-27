@@ -22,8 +22,8 @@ def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_error
    
             axParent = plt.Subplot(fig, outer[i])
                 
-            axParent.set_title("{}".format(reference_set.replace("_", " ")), fontweight='bold', pad=5, fontsize = 8)
-            axParent.set_xlabel("Simulated abundance",  labelpad=20, fontsize = 8)
+            axParent.set_title("{}".format(reference_set.replace("_", " ")), fontweight='bold', pad=5, fontsize = 12)
+            axParent.set_xlabel("Simulated abundance",  labelpad=20, fontsize = 10)
             axParent.set_xticks([])
             axParent.set_yticks([])
             axParent.spines["top"].set_visible(False)
@@ -55,13 +55,13 @@ def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_error
                     for box in bp0['boxes']:
                         box.set(color='purple')
 
-                    ax.legend([bp0["boxes"][0], bp1["boxes"][0]], ['Predictions at lineage level', 'Predictions at VOC level'], prop={'size': 6})
+                    ax.legend([bp0["boxes"][0], bp1["boxes"][0]], ['Predictions at lineage level', 'Predictions at VOC level'], prop={'size': 10})
                    
                 ax.grid("white")
                 ax.set_yticks((0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100))
-                ax.set_ylabel("Absolute prediction error", fontsize = 8)
+                ax.set_ylabel("Absolute prediction error", fontsize = 10)
                 ax.set_ylim(0,110)
-                ax.tick_params(axis='both', labelsize=6)
+                ax.tick_params(axis='both', labelsize=8)
                 ax.label_outer()
                 
 
@@ -85,13 +85,13 @@ def plot_with_line_plots_two_scales(continents, ref_sets_dict, absolute_errors, 
     fig = plt.figure(figsize=(30, 10))
     fig.set_dpi(100)
     outer = gridspec.GridSpec(1, 3, wspace=0.2, hspace=0.2)
-
+    colors = ["orange", "green", "red", "orange", "green", "red"]
     for continent , i in zip(continents, range(3)):
         inner = gridspec.GridSpecFromSubplotSpec(1, 2,
                                 subplot_spec=outer[i], wspace=0.1, hspace=0.1)
         axParent = plt.Subplot(fig, outer[i])
-        axParent.set_title("{}".format(continent.replace("_", " ")), fontweight='bold', pad=20, fontsize = 8)
-        axParent.set_xlabel("Allele frequency threshold",  labelpad=20, fontsize = 8)
+        axParent.set_title("{}".format(continent.replace("_", " ")), fontweight='bold', pad=20, fontsize = 14)
+        axParent.set_xlabel("Allele frequency threshold",  labelpad=20, fontsize = 10)
         axParent.set_xticks([])
         axParent.set_yticks([])
         axParent.spines["top"].set_visible(False)
@@ -105,7 +105,7 @@ def plot_with_line_plots_two_scales(continents, ref_sets_dict, absolute_errors, 
                 else: 
                     range_txt = "ten to hundred"
 
-                ax.set_title("Abundances in the range of {}".format(range_txt), pad=5, fontsize = 8)
+                ax.set_title("Abundances in the range of {}".format(range_txt), pad=5, fontsize = 10)
                 fig.add_subplot(ax)
                 for reference_set in ref_sets_dict[continent]:
                     sums = []
@@ -114,18 +114,52 @@ def plot_with_line_plots_two_scales(continents, ref_sets_dict, absolute_errors, 
                         sum_per_af = sum(list(absolute_errors[continent][reference_set][af].values())[scale[0]: scale[1]])/10
                         sums.append(sum_per_af)
                     
-                    ax.plot(allele_freqs, sums, label = reference_set.replace("_", " "))  
+                    if continent == "Europe":
+                        print("in, ", reference_set)
+                        ax.plot(allele_freqs, sums, label = reference_set.replace("_", " "), color = colors[0])
+                        colors.pop(0)
+                    else: 
+                        ax.plot(allele_freqs, sums, label = reference_set.replace("_", " "))  
+
                     ax.legend()                  
                     ax.grid("white")
                     ax.set_yticks((0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100))
                     ax.set_xticks(allele_freqs)
-                    ax.set_ylabel("Average absolute prediction error", fontsize = 8)
+                    ax.set_ylabel("Average absolute prediction error", fontsize = 10)
                     ax.set_ylim(0,100)
-                    ax.tick_params(axis='both', labelsize=6)
+                    ax.tick_params(axis='both', labelsize=8)
                     ax.label_outer()
 
     # save absolute error as pdf in figures folder
     plt.savefig(outdir + "/lineplots.pdf", bbox_inches='tight')
+
+    return 
+
+def plot_with_scatterplots_generic(abundances, dates, results, dirs_and_refs, bench_dir):
+
+    fig, ax = plt.subplots(2, 2, figsize=(20, 20))
+    # fig.set_dpi(2000)
+
+    for ref_set, tuple in zip(dirs_and_refs[bench_dir],[[0,0], [0,1], [1,0], [1,1]]):
+        i = tuple[0]
+        j = tuple[1]
+        for date in dates:
+            # create a new figure
+            ax[i][j].scatter(abundances, [results[bench_dir][ref_set][date][str(abundance)] for abundance in abundances], label= date.replace("_", " "))
+            ax[i][j].set_xlabel("Simulated abundance")
+            ax[i][j].set_ylabel("Predicted abundance")
+            ax[i][j].set_xscale('log')
+            ax[i][j].set_title("Reference set: {} \n Benchmark data sourced in {}".format(ref_set.replace("_", " "), bench_dir), fontweight='bold')
+            ax[i][j].grid()
+        # plot x=y line black and dashed
+        ax[i][j].plot(abundances, abundances, color='black', linestyle='dashed', label = "True abundance")
+        ax[i][j].legend()
+        ax[i][j].set_yticks([0, 10, 20, 30, 40, 50, 60, 70, 80 , 90, 100])
+            # save figure as pdf with tight layout
+    
+    plt.subplots_adjust(hspace=0.3)
+    plt.savefig("figures/scatter_plot.pdf", bbox_inches='tight')
+
 
     return 
 

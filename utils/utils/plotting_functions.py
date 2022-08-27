@@ -135,7 +135,7 @@ def plot_with_line_plots_two_scales(continents, ref_sets_dict, absolute_errors, 
 
     return 
 
-def plot_with_scatterplots_generic(abundances, dates, results, dirs_and_refs, bench_dir):
+def plot_with_scatterplots_generic(abundances, dates, results, dirs_and_refs, bench_dir, special_plot_name = None):
 
     fig, ax = plt.subplots(2, 2, figsize=(20, 20))
     # fig.set_dpi(2000)
@@ -158,7 +158,10 @@ def plot_with_scatterplots_generic(abundances, dates, results, dirs_and_refs, be
             # save figure as pdf with tight layout
     
     plt.subplots_adjust(hspace=0.3)
-    plt.savefig("figures/scatter_plot.pdf", bbox_inches='tight')
+    if special_plot_name == None:
+        plt.savefig("figures/scatter_plot.pdf", bbox_inches='tight')
+    else:
+        plt.savefig("figures/{}.pdf".format(special_plot_name), bbox_inches='tight')
 
 
     return 

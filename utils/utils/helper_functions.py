@@ -50,10 +50,14 @@ def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq
     
     return 
 
-def output_results_to_json_2_dirs(threshold, first_dirs, second_dirs, abundances, seq_name):
-    
-    all_files = getListOfFiles("kallisto_predictions/")
-    lineage_measured = seq_name.split("_")[0]
+def output_results_to_json_2_dirs(threshold, first_dirs, second_dirs, abundances, seq_name, prediction_level="lineage", VOC=None):
+    if prediction_level == "lineage":
+        all_files = getListOfFiles("kallisto_predictions/")
+        lineage_measured = seq_name.split("_")[0]
+    if prediction_level == "VOC":
+        all_files = getListOfFiles("kallisto_predictions_who/")
+        lineage_measured = VOC
+
     results = dict()
 
     for first_dir in first_dirs:
@@ -61,10 +65,12 @@ def output_results_to_json_2_dirs(threshold, first_dirs, second_dirs, abundances
         for second_dir in second_dirs:
             results[first_dir][second_dir] = dict()
             for ab in abundances:
-                path = "kallisto_predictions/{}/{}/{}_ab{}/predictions_m{}.tsv".format(first_dir, second_dir, seq_name, ab, threshold)
+                if prediction_level == "lineage":
+                    path = "kallisto_predictions/{}/{}/{}_ab{}/predictions_m{}.tsv".format(first_dir, second_dir, seq_name, ab, threshold)
+                if prediction_level == "VOC":
+                    path = "kallisto_predictions_who/{}/{}/{}_ab{}/predictions_m{}.tsv".format(first_dir, second_dir, seq_name, ab, threshold)
                 res_files = list(filter(lambda p: path in p, all_files))
                 predictions_df = pd.read_csv(res_files[0],sep='\t',skiprows=3, header = None)
-
                 for i in range(0, len(predictions_df)):
                     if predictions_df[0][i] == lineage_measured:
                         results[first_dir][second_dir][ab]= predictions_df[3][i]
@@ -72,9 +78,14 @@ def output_results_to_json_2_dirs(threshold, first_dirs, second_dirs, abundances
                 
                     if ab not in results[first_dir][second_dir].keys():
                         results[first_dir][second_dir][ab] = 0
-            
-    with open('results.json', 'w') as f:
-        json.dump(results, f)
+
+    if prediction_level == "lineage":       
+        with open('results.json', 'w') as f:
+            json.dump(results, f)
+    if prediction_level == "VOC":
+        with open('results_who.json', 'w') as f:
+            json.dump(results, f)
+
     
     return 
 

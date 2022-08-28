@@ -1,3 +1,11 @@
+date="2022-07-01"
+metadata="../../../../../GISAID/gisaid_2022_06_12/metadata.tsv"
+sequences="../../../../../GISAID/gisaid_2022_06_12/sequences.fasta"
+seed=1
+coverage=100
+state="Connecticut"
+voc="../../../data/Sublineages_Experiment/VOC/VOC_sequence_BA.5.5.fasta"
+mkdir -p benchmarks
+mkdir -p benchmarks/1
 
-python ../../benchmarking/create_benchmarks_multiple.py --div 13 --voc_perc 25 -m ../../data/Benchmark_Omicron_Main_Lineages/metadata.tsv -fr ../../data/Benchmark_Omicron_Main_Lineages/sequences.fasta -fv ../../data/BA.3_v2/BA.3_sequences.fasta -o benchmarks_global_v2/seed_${seed}_${coverage}x --total_cov ${coverage} --seed $seed 
-
+python ../../../benchmarking/create_benchmarks_with_seed.py --voc_perc 10 -m $metadata -fr $sequences -fv $voc -o benchmarks/${seed} --total_cov ${coverage} --seed $seed -s $state

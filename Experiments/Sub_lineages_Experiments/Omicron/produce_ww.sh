@@ -1,10 +1,10 @@
-date="2022-07-01"
+date="2022-05-31"
 metadata="../../../../../GISAID/gisaid_2022_06_12/metadata.tsv"
 sequences="../../../../../GISAID/gisaid_2022_06_12/sequences.fasta"
 seed=1
 coverage=100
 state="Connecticut"
-voc="../../../data/Sublineages_Experiment/VOC/VOC_sequence_BA.5.5.fasta"
+voc="../../../data/Sublineages_Experiment/VOC/VOC_sequence_BA.2.fasta"
 mkdir -p benchmarks
 mkdir -p benchmarks/1
 

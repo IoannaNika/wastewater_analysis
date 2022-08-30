@@ -9,7 +9,7 @@ for state in "Connecticut"; do \
     mkdir -p reference_sets
     mkdir -p $outdir
     # preprocess references
-    python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 1 -o $outdir --state $state --startdate "2022-03-01" --enddate "2022-05-31"
+    python ../../../pipeline/pipeline/preprocess_references.py -m $metadata -f $sequences --seed 1 -o $outdir --state $state --startdate "2022-02-01" --enddate "2022-04-30"
     # calculate within lineage variation
     bash ../../../pipeline/pipeline/call_variants.sh $outdir /tudelft.net/staff-umbrella/SARSCoV2Wastewater/inika/wastewater_analysis/data/Original_SARS-CoV-2_sequence/SARS-CoV-2-NC_045513.fa
     # select samples

@@ -310,15 +310,27 @@ def find_amount_of_lineage(lineage, metadata_dir, startsWithOnly=False):
     # find lineage
     if startsWithOnly:
         sum = 0
-        lineages = list(filter(lambda x: (x.startswith(lineage)), set(select_mt_file["Pango lineage"])))
+        try:
+            lineages = list(filter(lambda x: (x.startswith(lineage)), set(select_mt_file["Pango lineage"])))
+        except:
+            lineages = list(filter(lambda x: (x.startswith(lineage)), set(select_mt_file["pangolin_lineage"])))
         print("lineages found that match pattern:", lineages)
+
         for lin in lineages:
-            selection_amount_of_lineage_measured_seqs = select_mt_file["Pango lineage"].value_counts()[lin]
+            try:
+                selection_amount_of_lineage_measured_seqs = select_mt_file["Pango lineage"].value_counts()[lin]
+            except:
+                selection_amount_of_lineage_measured_seqs = select_mt_file["pangolin_lineage"].value_counts()[lin]
+
             sum += selection_amount_of_lineage_measured_seqs
 
         print("Amount of sequences that match pattern :", sum)
     else:
-        selection_amount_of_lineage_measured_seqs = select_mt_file["Pango lineage"].value_counts()[lineage]
+        try:
+            selection_amount_of_lineage_measured_seqs = select_mt_file["Pango lineage"].value_counts()[lineage]
+        except:
+            selection_amount_of_lineage_measured_seqs = select_mt_file["pangolin_lineage"].value_counts()[lineage]
+            
         print("Amount of sequences for lineage given :", selection_amount_of_lineage_measured_seqs)
 
     return 

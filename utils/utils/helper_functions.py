@@ -5,7 +5,7 @@ from Bio import SeqIO
 import time
 
 # Output predictions as json file for proximity experiments
-def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq_name, prediction_level="lineage", VOC=None):
+def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq_name, prediction_level="lineage", VOC=None, adj=True):
     
     if prediction_level == "lineage":
         all_files = getListOfFiles("kallisto_predictions/" + dir_name)
@@ -30,23 +30,35 @@ def output_results_to_json(dir_name, threshold, ref_sets, seeds, abundances, seq
                 for i in range(0, len(predictions_df)):
                     if VOC == None:
                         if predictions_df[0][i] == lineage_measured:
-                            results[ref_set][seed][ab]= predictions_df[3][i]
+                            if adj == True:
+                                results[ref_set][seed][ab]= predictions_df[3][i]
+                            else:
+                                results[ref_set][seed][ab]= predictions_df[2][i]
                             break
                     else : 
                         if predictions_df[0][i] == VOC:
-                            results[ref_set][seed][ab]= predictions_df[3][i]
+                            if adj == True:
+                                results[ref_set][seed][ab]= predictions_df[3][i]
+                            else:
+                                results[ref_set][seed][ab]= predictions_df[2][i]
                             break 
                 
                     if ab not in results[ref_set][seed].keys():
                         results[ref_set][seed][ab] = 0
-
-    if prediction_level == "lineage":    
-        with open("results/" + dir_name + "_results.json", 'w') as f:
-            json.dump(results, f)
-    if prediction_level == "VOC":
-        with open("results/" + dir_name + "_results_who.json", 'w') as f:
-            json.dump(results, f)
-
+    if adj == True:
+        if prediction_level == "lineage":    
+            with open("results/" + dir_name + "_results.json", 'w') as f:
+                json.dump(results, f)
+        if prediction_level == "VOC":
+            with open("results/" + dir_name + "_results_who.json", 'w') as f:
+                json.dump(results, f)
+    else:
+        if prediction_level == "lineage":    
+            with open("results/not_adjusted_" + dir_name + "_results.json", 'w') as f:
+                json.dump(results, f)
+        if prediction_level == "VOC":
+            with open("results/not_adjusted_" + dir_name + "_results_who.json", 'w') as f:
+                json.dump(results, f)
     
     return 
 

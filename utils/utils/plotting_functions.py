@@ -6,7 +6,7 @@ from numpy import size
 import numpy as np
 import pandas as pd
 
-def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_errors, outdir, absolute_errors_who=None):
+def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_errors, outdir, absolute_errors_who=None, labels=['Predictions at lineage level', 'Predictions at VOC level']):
 
     fig = plt.figure(figsize=(20, 10))
     fig.set_dpi(100)
@@ -55,7 +55,7 @@ def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_error
                     for box in bp0['boxes']:
                         box.set(color='purple')
 
-                    ax.legend([bp0["boxes"][0], bp1["boxes"][0]], ['Predictions at lineage level', 'Predictions at VOC level'], prop={'size': 10})
+                    ax.legend([bp0["boxes"][0], bp1["boxes"][0]], labels, prop={'size': 10})
                    
                 ax.grid("white")
                 ax.set_yticks((0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100))
@@ -75,7 +75,7 @@ def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_error
                 if num_of_figures == 5 and i == 4 and j == 1:
                     ax.set_position([0.55 + 0.24/2,0.125,0.228/2,0.343])
 
-    if absolute_errors_who == None:
+    if absolute_errors_who == None or labels != ['Predictions at lineage level', 'Predictions at VOC level']:
         plt.savefig(outdir + "boxplot_results.pdf", bbox_inches='tight')
     else:
         plt.savefig(outdir + "boxplot_results_who.pdf", bbox_inches='tight')

@@ -59,7 +59,8 @@ def main():
                 pango_lineage = "pango_lineage"
                 lineages = df[pango_lineage].unique()
 
-    else:   
+    else:
+        lineages = df["Pango lineage"].unique()
         lineage_to_variant = {lineage : lineage for lineage in lineages}
         abundance_dict = {lineage : [0, 0] for lineage in lineages}
 

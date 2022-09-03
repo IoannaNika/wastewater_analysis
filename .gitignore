@@ -30,3 +30,6 @@ __pycache__
 # modules
 *.egg-info
 
+
+# exceptions
+!Experiments/Sub_lineages_Experiments/Omicron/true_benchmark_abundances.tsv

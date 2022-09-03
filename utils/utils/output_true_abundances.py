@@ -102,9 +102,9 @@ def main():
 
             for (lin, count) in counts_per_lineage:
                 try:
-                    true_ab_dict[lin][loc] = lin_counts[lin]
+                    true_ab_dict[lin][loc + "_amount_of_ref_sequences"] = lin_counts[lin]
                 except:
-                    true_ab_dict[lin][loc] = 0
+                    true_ab_dict[lin][loc + "_amount_of_ref_sequences"] = 0
 
     res_dict = pd.DataFrame.from_dict(true_ab_dict)
 

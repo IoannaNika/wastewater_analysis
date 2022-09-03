@@ -90,6 +90,9 @@ def main():
                 if "predictions_{}".format(loc) not in true_ab_dict[lin].keys():
                     true_ab_dict[lin]["predictions_{}".format(loc)] = 0
 
+                true_ab_dict[lin]["absolute_error_{}".format(loc)] = round(abs(true_ab_dict[lin]["adj_ab"]- true_ab_dict[lin]["predictions_{}".format(loc)]),2)
+
+
     print("find amount of reference sequences per lineage in benchmark in the given reference sets....")
 
     if args.locations and args.ref_set_dir:

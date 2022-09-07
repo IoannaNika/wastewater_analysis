@@ -33,3 +33,4 @@ __pycache__
 
 # exceptions
 !Experiments/Sub_lineages_Experiments/Omicron/true_benchmark_abundances.tsv
+!Experiments/Sub_lineages_Experiments/Omicron/true_benchmark_abundances_less.tsv

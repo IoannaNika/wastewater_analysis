@@ -149,7 +149,7 @@ def main():
             div  = args.div
             print("Making file:{2}/{3}_{1}x".format(voc_fasta, VOC_cov/div, args.outdir, VOC_name))
             subprocess.check_call(
-                "art_illumina -ss HS25 --rndSeed {3} -i {0} -l 150 -f {1} -p -o {2}/{3}_{1}x -m 250 -s 10".format(voc_fasta, VOC_cov/div, args.outdir, VOC_name, seed), shell=True)
+                "art_illumina -ss HS25 --rndSeed {4} -i {0} -l 150 -f {1} -p -o {2}/{3}_{1}x -m 250 -s 10".format(voc_fasta, VOC_cov/div, args.outdir, VOC_name, seed), shell=True)
             # Add this file to combined sim file containing all genome files
             # Combine x1 with x1 file
             print("Trying to access file:{0}/{2}_{3}x1.fq ".format(args.outdir, background_cov, VOC_name, VOC_cov/div))

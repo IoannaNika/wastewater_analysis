@@ -9,7 +9,7 @@ def main():
     parser = argparse.ArgumentParser(description="Given the metadata file of some benchmark and the voc simulated & its abundance, it calulates the true abundance for each lineage in the benchmark")
     parser.add_argument('--m', dest = 'metadata', required=True, type=str, help="relative path to metadata file")
     parser.add_argument('--voc', dest = 'voc', required=True, type=str, help="simulated voc/lineage")
-    parser.add_argument('--voc_ab', dest = 'voc_ab', required=True, type=int, help="abundance simulated for the voc/lineage")
+    parser.add_argument('--voc_ab', dest = 'voc_ab', required=True, type=float, help="abundance simulated for the voc/lineage")
     parser.add_argument('--min_ab', dest = 'min_ab', required=True, type=float, help="minimum abundance threshold")
     parser.add_argument('--ref_set_locations', dest = 'locations', required=False, type=str, help="comma seperated string with reference set locations")
     parser.add_argument('--ref_set_dir', dest = 'ref_set_dir', required=False, type=str, help="path to reference sets")
@@ -40,7 +40,10 @@ def main():
         true_ab_dict[lineage]["adj_ab"] = 0
 
     # initialize voc abundance
-    true_ab_dict[args.voc]["true_ab"] = args.voc_ab
+    try:
+        true_ab_dict[args.voc]["true_ab"] = args.voc_ab
+    except:
+        pass
 
     # calculate true abundances 
 
@@ -79,7 +82,7 @@ def main():
         locs =  args.locations.split(",")
         for loc in locs:
             # read abundance predictions
-            predictions_path = "Experiments/Sub_lineages_Experiments/Omicron/kallisto_predictions/{}/VOC_sequence_BA.2_ab1/predictions_m0.1.tsv".format(loc)
+            predictions_path = "Experiments/Sub_lineages_Experiments/Omicron/kallisto_predictions_test/{}/_ab12.5/predictions_m0.1.tsv".format(loc)
             predictions_df = pd.read_csv(predictions_path, sep='\t',skiprows=3, header = None)
             
             for (lin, count) in counts_per_lineage:

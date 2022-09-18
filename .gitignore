@@ -5,6 +5,7 @@ data/.fasta
 Experiments/**/reference_set/**
 Experiments/**/reference_sets/**
 **/benchmarks/**
+**/benchmarks_*/**
 **/*.bam
 **/*.sam
 **/*.fasta
@@ -32,5 +33,5 @@ __pycache__
 
 
 # exceptions
-!Experiments/Sub_lineages_Experiments/Omicron/true_benchmark_abundances.tsv
+!Experiments/Sub_lineages_Experiments/Omicron/true_benchmark_abundances*.tsv
 !Experiments/Sub_lineages_Experiments/Omicron/true_benchmark_abundances_less.tsv

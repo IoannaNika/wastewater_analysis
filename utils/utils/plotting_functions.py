@@ -23,7 +23,7 @@ def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_error
             axParent = plt.Subplot(fig, outer[i])
                 
             axParent.set_title("{}".format(reference_set.replace("_", " ")), fontweight='bold', pad=5, fontsize = 12)
-            axParent.set_xlabel("Simulated abundance",  labelpad=20, fontsize = 10)
+            axParent.set_xlabel("Simulated abundance",  labelpad=19, fontsize = 13)
             axParent.set_xticks([])
             axParent.set_yticks([])
             axParent.spines["top"].set_visible(False)
@@ -41,27 +41,26 @@ def plot_with_boxplots_two_scales(num_of_figures, reference_sets, absolute_error
             for j, abundances, scale in zip(range(2), [[1,2,3,4,5,6,7,8,9,10], [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]], [[0, 10], [9, 20]]):
                 ax = plt.Subplot(fig, inner[j])
                 fig.add_subplot(ax)
-                ax.set_xticklabels(abundances)
                 if absolute_errors_who == None:
-                    ax.boxplot(list(list(item.values())for item in absolute_errors[reference_set].values())[scale[0]: scale[1]])
+                    ax.boxplot(list(list(item.values())for item in absolute_errors[reference_set].values())[scale[0]: scale[1]],patch_artist=False)
                     ax.set_xticklabels(abundances)
                 else:
-                    bp0= ax.boxplot(list(list(item.values())for item in absolute_errors[reference_set].values())[scale[0]: scale[1]],  patch_artist=False)
-                    bp1 = ax.boxplot(list(list(item.values())for item in absolute_errors_who[reference_set].values())[scale[0]: scale[1]],  patch_artist=False)
-                
+                    bp0= ax.boxplot(list(list(item.values())for item in absolute_errors[reference_set].values())[scale[0]: scale[1]],  patch_artist=False, labels = abundances)
+                    bp1 = ax.boxplot(list(list(item.values())for item in absolute_errors_who[reference_set].values())[scale[0]: scale[1]],  patch_artist=False, labels = abundances)
+
                     for box in bp1['boxes']:
                         box.set(color='blue')
                     
                     for box in bp0['boxes']:
                         box.set(color='purple')
 
-                    ax.legend([bp0["boxes"][0], bp1["boxes"][0]], labels, prop={'size': 10})
-                   
+                    ax.legend([bp0["boxes"][0], bp1["boxes"][0]], labels, prop={'size': 12.5})
+
                 ax.grid("white")
                 ax.set_yticks((0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100))
-                ax.set_ylabel("Absolute prediction error", fontsize = 10)
+                ax.set_ylabel("Absolute prediction error", fontsize = 13)
                 ax.set_ylim(0,110)
-                ax.tick_params(axis='both', labelsize=8)
+                ax.tick_params(axis='both', labelsize=13)
                 ax.label_outer()
                 
 
@@ -90,8 +89,8 @@ def plot_with_line_plots_two_scales(continents, ref_sets_dict, absolute_errors, 
         inner = gridspec.GridSpecFromSubplotSpec(1, 2,
                                 subplot_spec=outer[i], wspace=0.1, hspace=0.1)
         axParent = plt.Subplot(fig, outer[i])
-        axParent.set_title("{}".format(continent.replace("_", " ")), fontweight='bold', pad=20, fontsize = 14)
-        axParent.set_xlabel("Allele frequency threshold",  labelpad=20, fontsize = 10)
+        axParent.set_title("{}".format(continent.replace("_", " ")), fontweight='bold', pad=40, fontsize = 12)
+        axParent.set_xlabel("Allele frequency threshold",  labelpad=40, fontsize = 15)
         axParent.set_xticks([])
         axParent.set_yticks([])
         axParent.spines["top"].set_visible(False)
@@ -105,7 +104,7 @@ def plot_with_line_plots_two_scales(continents, ref_sets_dict, absolute_errors, 
                 else: 
                     range_txt = "ten to hundred"
 
-                ax.set_title("Abundances in the range of {}".format(range_txt), pad=5, fontsize = 10)
+                ax.set_title("Abundances in the range of {}".format(range_txt), pad=10, fontsize = 10)
                 fig.add_subplot(ax)
                 for reference_set in ref_sets_dict[continent]:
                     sums = []

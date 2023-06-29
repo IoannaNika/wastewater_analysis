@@ -11,7 +11,7 @@ for info in "Noord-Holland,B.1.1.529,2022-02-10,Netherlands,Europe" "Connecticut
     country=$4
     continent=$5
     mkdir -p benchmarks/$folder_name 
-    for seed in 1; do \
+    for seed in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do \
             mkdir -p benchmarks/$folder_name/$seed
             
             python ../../../benchmarking/create_benchmarks_with_seed.py --voc_perc 1,2,3,4,5,6,7,8,9,10,20,30,40,50,60,70,80,90,100 -m $metadata -fr $sequences -fv ../../../data/Timeframe_Experiments/HPC/VOCs/${state}/${lineage}_sequence.fasta -o benchmarks/${folder_name}/$seed --total_cov 100 -s "${continent} / ${country} / ${state}" -d $date --seed $seed

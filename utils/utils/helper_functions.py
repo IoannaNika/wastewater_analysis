@@ -193,19 +193,23 @@ def calculate_absolute_errors(results_dict, seeds, abundances, ref_sets):
 
     return absolute_errors
 # calculate absolute errors for allele frequency optimization experiment
-def calculate_absolute_errors_af(results_dict, allele_freqs, abundances, ref_sets_dict, continents):
+def calculate_absolute_errors_af(results_dict, third_dirs, abundances, second_dirs, first_dirs, nested=False):
     abs_errors = dict()
 
-    for continent in continents: 
-        abs_errors[continent] = dict()
-        for ref_set in ref_sets_dict[continent]:
-            abs_errors[continent][ref_set] = dict()
-            for af in allele_freqs:
-                af = str(af)
-                abs_errors[continent][ref_set][af] = dict()
+    temp_second_dirs = second_dirs.copy()
+    
+    for first_dir in first_dirs: 
+        abs_errors[first_dir] = dict()
+        if nested:
+            temp_second_dirs = second_dirs[first_dir]
+        for second_dir in temp_second_dirs:
+            abs_errors[first_dir][second_dir] = dict()
+            for third_dir in third_dirs:
+                third_dir = str(third_dir)
+                abs_errors[first_dir][second_dir][third_dir] = dict()
                 for ab in abundances:
-                    absolute_error = round(abs(ab - results_dict[continent][ref_set][af][str(ab)]), 3)
-                    abs_errors[continent][ref_set][af][str(ab)] = absolute_error
+                    absolute_error = round(abs(ab - results_dict[first_dir][second_dir][third_dir][str(ab)]), 3)
+                    abs_errors[first_dir][second_dir][third_dir][str(ab)] = absolute_error
     return abs_errors
 
 # given a fasta file and a list of sequence identifiers,
